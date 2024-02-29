@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - 5433:5432
+      - 5432:5432
     volumes:
       - ./pg_data:/var/lib/postgresql/data/pgdata
 
@@ -22,9 +22,23 @@ services:
     volumes:
       - pgAdmin:/var/lib/pgadmin
     ports:
-      - 5050:80
+      - 8888:80
     depends_on:
       - db
+
+  app:
+    container_name: iPrody-Devs-Gr0000000008-product-service
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      POSTGRES_HOST: db
+    restart: always
+    depends_on:
+      - db
+      - pgAdmin
+
 volumes:
   pg_data:
   pgAdmin:
