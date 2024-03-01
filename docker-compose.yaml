@@ -1,35 +1,45 @@
-version: '3'
+version: '3.7'
 services:
   db:
     image: postgres
     container_name: postgres
     restart: always
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_DB: product_db
-      POSTGRES_PASSWORD: postgres
-      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
     ports:
-      - 5432:5432
+      - "5432:5432"
+    networks:
+      - network
     volumes:
-      - ./pg_data:/var/lib/postgresql/data/pgdata
+      - pg_data:/var/lib/postgresql/data
+    secrets:
+      - postgres_password
 
   pgAdmin:
     container_name: pg_admin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: 123
+      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_password
     volumes:
       - pgAdmin:/var/lib/pgadmin
     ports:
-      - 8888:80
+      - "8888:80"
+    networks:
+      - network
     depends_on:
       - db
+    secrets:
+      - pgadmin_password
 
   app:
     container_name: iPrody-Devs-Gr0000000008-product-service
     build:
       dockerfile: Dockerfile
+    networks:
+      - network
     ports:
       - 8080:8080
     environment:
@@ -39,6 +49,16 @@ services:
       - db
       - pgAdmin
 
+networks:
+  network:
+    driver: bridge
+
 volumes:
   pg_data:
   pgAdmin:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  pgadmin_password:
+    file: ./secrets/pgadmin_password.txt
