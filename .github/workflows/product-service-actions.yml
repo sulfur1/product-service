@@ -51,6 +51,7 @@ jobs:
             !target/**/*.md
   checkstyle_job:
     runs-on: ubuntu-latest
+    needs: [test_job]
     name: Checkstyle job
     steps:
     - uses: actions/checkout@v3
@@ -78,7 +79,7 @@ jobs:
       run: mvn test
   build:
     runs-on: ubuntu-latest
-    needs: [checkstyle_job, test_job]
+    needs: [checkstyle_job]
     name: Build service
     steps:
     - uses: actions/checkout@v3
