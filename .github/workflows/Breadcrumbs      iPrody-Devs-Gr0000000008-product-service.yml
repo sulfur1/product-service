@@ -10,12 +10,7 @@ name: Java CI with Maven
 
 on:
   pull_request:
-    types: 
-      - closed
-    branches: [ "develop" ]
-  push:
-    branches: [ "feature" ]
-
+  
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
