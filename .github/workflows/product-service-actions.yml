@@ -50,7 +50,6 @@ jobs:
             target
             !target/**/*.md
   checkstyle_job:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     name: Checkstyle job
     steps:
@@ -65,7 +64,6 @@ jobs:
       run: mvn checkstyle:check
         
   test_job:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     name: Run tests
     steps:
@@ -79,7 +77,6 @@ jobs:
     - name: Run test with Maven
       run: mvn test
   build:
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs: [checkstyle_job, test_job]
     name: Build service
