@@ -72,7 +72,8 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>3.3.1</version>
 				<configuration>
-					<configLocation>checkstyle.xml</configLocation>
+					<configLocation>${basedir}/config/checkstyle/checkstyle.xml</configLocation>
+					<propertiesLocation>${basedir}/config/checkstyle_maven.properties</propertiesLocation>
 				</configuration>
 				<executions>
 					<execution>
