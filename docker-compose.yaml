@@ -1,0 +1,64 @@
+version: '3.7'
+services:
+  db:
+    image: postgres
+    container_name: postgres_pr
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: product_db
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    ports:
+      - "5432:5432"
+    networks:
+      - network
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    secrets:
+      - postgres_password
+
+  pgAdmin:
+    container_name: pg_admin_pr
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_password
+    volumes:
+      - pgAdmin:/var/lib/pgadmin
+    ports:
+      - "8888:80"
+    networks:
+      - network
+    depends_on:
+      - db
+    secrets:
+      - pgadmin_password
+
+  app:
+    image: product:latest
+    container_name: product-service
+    networks:
+      - network
+    ports:
+      - 8080:8080
+    environment:
+      POSTGRES_HOST: db
+    restart: always
+    depends_on:
+      - db
+      - pgAdmin
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  pg_data:
+  pgAdmin:
+
+secrets:
+  postgres_password:
+    file: ./secrets/postgres_password.txt
+  pgadmin_password:
+    file: ./secrets/pgadmin_password.txt
+
