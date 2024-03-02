@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: product_db
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - network
     volumes:
@@ -34,20 +34,19 @@ services:
     secrets:
       - pgadmin_password
 
-#  app:
-#    container_name: iPrody-Devs-Gr0000000008-product-service
-#    build:
-#      dockerfile: Dockerfile
-#    networks:
-#      - network
-#    ports:
-#      - 8080:8080
-#    environment:
-#      POSTGRES_HOST: db
-#    restart: always
-#    depends_on:
-#      - db
-#      - pgAdmin
+  app:
+    image: product:latest
+    container_name: product-service
+    networks:
+      - network
+    ports:
+      - 8080:8080
+    environment:
+      POSTGRES_HOST: db
+    restart: always
+    depends_on:
+      - db
+      - pgAdmin
 
 networks:
   network:
