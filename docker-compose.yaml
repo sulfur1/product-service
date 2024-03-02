@@ -2,14 +2,14 @@ version: '3.7'
 services:
   db:
     image: postgres
-    container_name: postgres
+    container_name: postgres_pr
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: product_db
       POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - network
     volumes:
@@ -18,7 +18,7 @@ services:
       - postgres_password
 
   pgAdmin:
-    container_name: pg_admin
+    container_name: pg_admin_pr
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@gmail.com
@@ -34,20 +34,20 @@ services:
     secrets:
       - pgadmin_password
 
-  app:
-    container_name: iPrody-Devs-Gr0000000008-product-service
-    build:
-      dockerfile: Dockerfile
-    networks:
-      - network
-    ports:
-      - 8080:8080
-    environment:
-      POSTGRES_HOST: db
-    restart: always
-    depends_on:
-      - db
-      - pgAdmin
+#  app:
+#    container_name: iPrody-Devs-Gr0000000008-product-service
+#    build:
+#      dockerfile: Dockerfile
+#    networks:
+#      - network
+#    ports:
+#      - 8080:8080
+#    environment:
+#      POSTGRES_HOST: db
+#    restart: always
+#    depends_on:
+#      - db
+#      - pgAdmin
 
 networks:
   network:
@@ -62,3 +62,4 @@ secrets:
     file: ./secrets/postgres_password.txt
   pgadmin_password:
     file: ./secrets/pgadmin_password.txt
+
