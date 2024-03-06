@@ -8,10 +8,6 @@ public final class App {
     private App() {
     }
 
-    /**
-     * Test application for check cucumber.
-     * @param args
-     */
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }

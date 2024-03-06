@@ -14,7 +14,7 @@ import java.util.List;
 public class CucumberReportRunner extends BlockJUnit4ClassRunner {
     @Value("${project.name}")
     private static String projectName;
-    @Value(("${build.number}"))
+    @Value("${build.number}")
     private static String buildNumber;
     @Value("${branch.name}")
     private static String branchName;
