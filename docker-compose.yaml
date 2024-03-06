@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   db:
-    image: postgres
+    image: postgres:latest
     container_name: postgres_pr
     restart: always
     environment:
@@ -21,7 +21,7 @@ services:
     container_name: pg_admin_pr
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@gmail.com
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_password
     volumes:
       - pgAdmin:/var/lib/pgadmin
@@ -34,19 +34,19 @@ services:
     secrets:
       - pgadmin_password
 
-  app:
-    image: product:latest
-    container_name: product-service
-    networks:
-      - network
-    ports:
-      - 8080:8080
-    environment:
-      POSTGRES_HOST: db
-    restart: always
-    depends_on:
-      - db
-      - pgAdmin
+  #app:
+    #image: product:latest
+    #container_name: product-service
+    #networks:
+      #- network
+    #ports:
+      #- 8080:8080
+    #environment:
+      #POSTGRES_HOST: db
+    #restart: always
+    #depends_on:
+      #- db
+      #- pgAdmin
 
 networks:
   network:
