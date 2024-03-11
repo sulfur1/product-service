@@ -53,12 +53,31 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>io.cucumber</groupId>
+					<artifactId>cucumber-maven-plugin</artifactId>
+					<version>7.15.0</version> <!-- Укажите актуальную версию плагина -->
+					<executions>
+						<execution>
+							<id>test</id>
+							<phase>test</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<glue>com.iprodi08.e2e.steps</glue>
+						<features>src/test/resources/features</features>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
 
     <modules>
         <module>product-service-app</module>
-    </modules>
+		<module>e2e</module>
+	</modules>
 
 </project>
