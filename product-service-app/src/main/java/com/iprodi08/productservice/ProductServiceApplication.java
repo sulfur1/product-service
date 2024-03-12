@@ -5,12 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ProductServiceApplication {
-/**
-*
-* @param args
-*/
-public static void main(String[] args) {
-SpringApplication.run(ProductServiceApplication.class, args);
-}
+    /**
+    * Product service entrypoint.
+    * @param args default arguments.
+    */
+    public static void main(String[] args) {
+        SpringApplication.run(ProductServiceApplication.class, args);
+    }
 
 }
