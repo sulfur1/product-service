@@ -3,9 +3,9 @@ package com.iprodi08.productservice.entity;
 import com.iprodi08.productservice.entity.enumType.Currency;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
@@ -19,6 +19,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,10 +33,11 @@ import java.util.List;
 @Table(name = "prices")
 public class Price {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "prices_seq", sequenceName = "prices_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "prices_seq")
     private Long id;
 
-    @Column
+    @Column(name = "price_value")
     private BigDecimal value;
 
     @Enumerated(EnumType.STRING)
@@ -52,4 +54,8 @@ public class Price {
 
     @OneToMany(mappedBy = "price")
     private List<Product> products;
+
+    public Price(BigDecimal value, Currency currency) {
+        this(null, value, currency, null, null, new ArrayList<>());
+    }
 }

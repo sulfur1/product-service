@@ -11,7 +11,7 @@ public interface ProductMapper {
     @Mapping(target = "summary", source = "summary")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "priceDto", source = "price")
-    @Mapping(target = "durationDtos", source = "durations")
+    @Mapping(target = "durationDto", source = "duration")
     @Mapping(target = "active", source = "active")
     @Mapping(target = "discountDtos", source = "discounts")
     ProductDto productToProductDto(Product product);
@@ -22,7 +22,7 @@ public interface ProductMapper {
     @Mapping(target = "summary", source = "summary")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "price", source = "priceDto")
-    @Mapping(target = "durations", source = "durationDtos")
+    @Mapping(target = "duration", source = "durationDto")
     @Mapping(target = "active", source = "active")
     @Mapping(target = "discounts", source = "discountDtos")
     Product productDtoToProduct(ProductDto productDto);

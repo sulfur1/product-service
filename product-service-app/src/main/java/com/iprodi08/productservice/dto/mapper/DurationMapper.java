@@ -13,6 +13,6 @@ public interface DurationMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "product", ignore = true)
+    @Mapping(target = "products", ignore = true)
     Duration durationDtoToDuration(DurationDto durationDto);
 }

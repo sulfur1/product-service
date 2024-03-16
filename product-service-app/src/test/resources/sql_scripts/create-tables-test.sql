@@ -1,3 +1,23 @@
+CREATE SEQUENCE prices_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  MINVALUE 1;
+
+CREATE SEQUENCE products_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  MINVALUE 1;
+
+CREATE SEQUENCE durations_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  MINVALUE 1;
+
+CREATE SEQUENCE discounts_id_seq
+  START WITH 1
+  INCREMENT BY 1
+  MINVALUE 1;
+
 create table prices (
     id                  bigserial primary key,
     price_value     	numeric(5,2) not null,
@@ -14,14 +34,14 @@ create table durations (
 );
 
 create table products (
-    id          bigserial primary key,
-    summary     varchar (100) not null,
-    description text not null,
-    price_id    bigint not null,
-    duration_id    bigint not null,
-    active      boolean not null,
-    created_at  timestamp with time zone not null,
-    updated_at  timestamp with time zone not null,
+    id              bigserial primary key,
+    summary         varchar (100) not null,
+    description     text not null,
+    price_id        bigint not null,
+    duration_id     bigint not null,
+    active          boolean not null,
+    created_at      timestamp with time zone not null,
+    updated_at      timestamp with time zone not null,
     constraint price_fk foreign key (price_id) references prices (id),
     constraint duration_fk foreign key (duration_id) references durations (id)
 );

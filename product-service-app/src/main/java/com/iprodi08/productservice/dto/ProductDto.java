@@ -20,14 +20,14 @@ public class ProductDto {
 
     private PriceDto priceDto;
 
-    private List<DurationDto> durationDtos;
+    private DurationDto durationDto;
 
     private Boolean active;
 
     private List<DiscountDto> discountDtos;
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -38,13 +38,13 @@ public class ProductDto {
         return Objects.equals(summary, productDto.summary)
                 && Objects.equals(description, productDto.description)
                 && Objects.equals(priceDto, productDto.priceDto)
-                && Objects.equals(durationDtos, productDto.durationDtos)
+                && Objects.equals(durationDto, productDto.durationDto)
                 && Objects.equals(active, productDto.active)
                 && Objects.equals(discountDtos, productDto.discountDtos);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hash(summary, description, priceDto, durationDtos, active, discountDtos);
+    public int hashCode() {
+        return Objects.hash(summary, description, priceDto, durationDto, active, discountDtos);
     }
 }
