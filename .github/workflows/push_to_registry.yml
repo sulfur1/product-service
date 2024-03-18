@@ -19,6 +19,11 @@ env:
 jobs:
   push_to_github_registry:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./product-service-app/Dockerfile
     permissions:
       contents: read
       packages: write
@@ -32,7 +37,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build project with Maven
-        run: mvn -B install -Dmaven.test.skip=true -Dcheckstyle.skip --file pom.xml
+        run: mvn -B clean install -Dmaven.test.skip=true -Dcheckstyle.skip -f pom.xml
       - name: Log in to the Container registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -48,8 +53,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./product-service-app
+          file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
