@@ -89,12 +89,12 @@
 							<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
 							<sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
 						</sourceDirectories>
-						<configLocation>config/checkstyle/checkstyle.xml</configLocation>
 						<propertyExpansion>config_loc=${config_loc}</propertyExpansion>
+						<configLocation>${config_loc}/checkstyle.xml</configLocation>
 					</configuration>
 					<executions>
 						<execution>
-#							<id>validate</id>
+							<id>validate</id>
 							<phase>validate</phase>
 							<goals>
 								<goal>check</goal>
@@ -109,6 +109,6 @@
     <modules>
         <module>product-service-app</module>
 		<module>e2e</module>
-    </modules>
+	</modules>
 
 </project>

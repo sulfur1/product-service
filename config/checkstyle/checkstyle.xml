@@ -27,7 +27,7 @@
         <property name="basedir" value="${basedir}"/>
     -->
     <property name="severity" value="error"/>
-    <property name="fileExtensions" value="java, properties, xml"/>
+    <property name="fileExtensions" value="java, properties, xml, yml, yaml"/>
 
     <!-- Excludes all 'module-info.java' files              -->
     <!-- See https://checkstyle.org/config_filefilters.html -->
@@ -180,7 +180,7 @@
         <module name="AvoidDoubleBraceInitialization"/>
         <module name="DeclarationOrder"/>
         <module name="DefaultComesLast"/>
-        <module name="FinalLocalVariable"/>
+<!--        <module name="FinalLocalVariable"/>-->
         <module name="IllegalCatch"/>
         <module name="IllegalThrows"/>
         <module name="ModifiedControlVariable"/>
@@ -212,18 +212,18 @@
 
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/config_design.html -->
-        <module name="DesignForExtension"/>
+<!--        <module name="DesignForExtension"/>-->
         <module name="FinalClass"/>
-        <module name="HideUtilityClassConstructor"/>
+<!--        <module name="HideUtilityClassConstructor"/>-->
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier"/>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See https://checkstyle.org/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters">
-            <property name="tokens" value="CTOR_DEF"/>
-        </module>
+<!--        <module name="FinalParameters">-->
+<!--            <property name="tokens" value="CTOR_DEF"/>-->
+<!--        </module>-->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 

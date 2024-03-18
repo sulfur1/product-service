@@ -13,12 +13,22 @@
     <artifactId>e2e</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <version>3.2.3</version>
             <scope>test</scope>
+        </dependency>
+<!--         https://mvnrepository.com/artifact/io.cucumber/cucumber-spring-->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>7.15.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-java -->
         <dependency>
@@ -32,12 +42,6 @@
             <artifactId>cucumber-junit</artifactId>
             <version>7.15.0</version>
             <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-spring -->
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-spring</artifactId>
-            <version>7.15.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/net.masterthought/cucumber-reporting -->
         <dependency>
