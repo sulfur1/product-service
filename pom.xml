@@ -19,7 +19,8 @@
 
 	<properties>
 		<java.version>21</java.version>
-        <config_loc>config/checkstyle</config_loc>
+		<checkstyle.dir>${basedir}/checkstyle</checkstyle.dir>
+		<config_loc>config</config_loc>
 	</properties>
 
 	<build>
@@ -89,8 +90,8 @@
 							<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
 							<sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
 						</sourceDirectories>
-						<propertyExpansion>config_loc=${config_loc}</propertyExpansion>
-						<configLocation>${config_loc}/checkstyle.xml</configLocation>
+						<configLocation>${checkstyle.dir}/checkstyle.xml</configLocation>
+						<propertyExpansion>config_loc=${checkstyle.dir}/${config_loc}</propertyExpansion>
 					</configuration>
 					<executions>
 						<execution>

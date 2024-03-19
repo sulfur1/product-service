@@ -12,6 +12,10 @@
 
     <artifactId>product-service-app</artifactId>
 
+    <properties>
+        <checkstyle.dir>${basedir}/../checkstyle</checkstyle.dir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
