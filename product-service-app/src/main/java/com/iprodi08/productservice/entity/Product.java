@@ -2,12 +2,11 @@ package com.iprodi08.productservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.FetchType;
@@ -20,6 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +33,8 @@ import java.util.List;
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "products_seq", sequenceName = "products_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "products_seq")
     private Long id;
 
     @Column
@@ -46,8 +47,9 @@ public class Product {
     @JoinColumn(name = "price_id", nullable = false)
     private Price price;
 
-    @OneToMany(mappedBy = "product")
-    private List<Duration> durations;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "duration_id", nullable = false)
+    private Duration duration;
 
     @Column
     private Boolean active;
@@ -67,4 +69,8 @@ public class Product {
             inverseJoinColumns = { @JoinColumn(name = "discount_id") }
     )
     private List<Discount> discounts;
+
+    public Product(String summary, String description, Price price, Duration duration, Boolean active) {
+        this(null, summary, description, price, duration, active, null, null, new ArrayList<>());
+    }
 }

@@ -2,13 +2,11 @@ package com.iprodi08.productservice.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +15,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Duration entity
@@ -29,7 +29,8 @@ import java.time.Instant;
 @Table(name = "durations")
 public class Duration {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "durations_seq", sequenceName = "durations_id_seq", allocationSize = 1)
+    @GeneratedValue(generator = "durations_seq")
     private Long id;
 
     @Column(name = "in_days")
@@ -43,7 +44,10 @@ public class Duration {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @OneToMany(mappedBy = "duration")
+    private List<Product> products;
+
+    public Duration(Integer inDays) {
+        this(null, inDays, null, null, new ArrayList<>());
+    }
 }

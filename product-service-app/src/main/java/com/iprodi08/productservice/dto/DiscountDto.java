@@ -20,8 +20,10 @@ public class DiscountDto {
 
     private OffsetDateTime dateTimeUntil;
 
+    private Boolean active;
+
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -31,11 +33,12 @@ public class DiscountDto {
         final DiscountDto discountDto = (DiscountDto) o;
         return Objects.equals(value, discountDto.value)
                 && Objects.equals(dateTimeFrom, discountDto.dateTimeFrom)
-                && Objects.equals(dateTimeUntil, discountDto.dateTimeUntil);
+                && Objects.equals(dateTimeUntil, discountDto.dateTimeUntil)
+                && Objects.equals(active, discountDto.active);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hash(value, dateTimeFrom, dateTimeUntil);
+    public int hashCode() {
+        return Objects.hash(value, dateTimeFrom, dateTimeUntil, active);
     }
 }
