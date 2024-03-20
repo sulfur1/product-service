@@ -46,7 +46,7 @@ public final class ProductTestData {
 
     public static Product getNew() {
         return Product.createNewProduct(
-                PRODUCT_NEW_ID,
+                null,
                 "NewProduct",
                 "This is new product",
                 true

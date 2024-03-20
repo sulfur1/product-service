@@ -102,7 +102,7 @@ public final class DiscountTestData {
 
     public static Discount getNew() {
         return Discount.createNewDiscount(
-                DISCOUNT_NEW_ID,
+                null,
                 DISCOUNT_NEW_VALUE,
                 DISCOUNT_3_DATE_TIME_FROM,
                 DISCOUNT_3_DATE_TIME_UNTIL,

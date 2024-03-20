@@ -23,9 +23,9 @@ public final class PriceTestData {
 
     public static final BigDecimal PRICE_2_VALUE = BigDecimal.valueOf(500.00);
 
-    public static final BigDecimal PRICE_3_VALUE = BigDecimal.valueOf(70000.00);
+    public static final BigDecimal PRICE_3_VALUE = BigDecimal.valueOf(515.00);
 
-    public static final BigDecimal PRICE_NEW_VALUE = BigDecimal.valueOf(50000.00);
+    public static final BigDecimal PRICE_NEW_VALUE = BigDecimal.valueOf(312.00);
 
     public static final Long NOT_EXIST_ID = 110L;
 
@@ -44,7 +44,7 @@ public final class PriceTestData {
     public static final Price PRICE_3 = Price.createNewPrice(
             PRICE_ID_3,
             PRICE_3_VALUE,
-            Currency.RUB
+            Currency.USD
     );
 
     private static final PriceMapper MAPPER = Mappers.getMapper(PriceMapper.class);
@@ -54,9 +54,9 @@ public final class PriceTestData {
 
     public static Price getNew() {
         return Price.createNewPrice(
-                PRICE_NEW_ID,
+                null,
                 PRICE_NEW_VALUE,
-                Currency.RUB
+                Currency.USD
         );
     }
 

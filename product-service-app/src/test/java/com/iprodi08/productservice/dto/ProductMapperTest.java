@@ -27,6 +27,8 @@ class ProductMapperTest {
 
     @Test
     void giveProductDtoFromProduct() {
+        //given
+
         final PriceDto actualpriceDto = getPriceDto(PRICE_1);
 
         final DurationDto actualDurationDto = getDurationDto(DURATION_1);
@@ -38,19 +40,20 @@ class ProductMapperTest {
         product.setDuration(DURATION_1);
         product.setDiscounts(List.of(DISCOUNT_1));
 
+        //when
+
         final ProductDto mapperProductDto = mapper.productToProductDto(product);
+        final DurationDto expectedDurationDto = mapperProductDto.getDurationDto();
+        final DiscountDto expectedDiscountDto = mapperProductDto.getDiscountDtos().getFirst();
+
+        //then
 
         assertEquals("Product1", mapperProductDto.getSummary());
         assertEquals("This is product 1", mapperProductDto.getDescription());
         assertEquals(actualpriceDto.getValue(), mapperProductDto.getPriceDto().getValue());
         assertEquals(actualpriceDto.getCurrency(), mapperProductDto.getPriceDto().getCurrency());
-
-        final DurationDto expectedDurationDto = mapperProductDto.getDurationDto();
         assertEquals(actualDurationDto.getInDays(), expectedDurationDto.getInDays());
-
         assertTrue(mapperProductDto.getActive());
-
-        final DiscountDto expectedDiscountDto = mapperProductDto.getDiscountDtos().getFirst();
         assertEquals(actualDiscountDto.getValue(), expectedDiscountDto.getValue());
     }
 }
