@@ -15,24 +15,26 @@ import java.util.Objects;
 @AllArgsConstructor
 public class PriceDto {
 
+    private Long id;
+
     private BigDecimal value;
 
     private Currency currency;
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final PriceDto priceDto = (PriceDto) o;
-        return Objects.equals(value, priceDto.value) && currency == priceDto.currency;
+        PriceDto priceDto = (PriceDto) o;
+        return Objects.equals(id, priceDto.id);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hash(value, currency);
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
