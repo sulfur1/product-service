@@ -13,22 +13,24 @@ import java.util.Objects;
 @NoArgsConstructor
 public class DurationDto {
 
+    private Long id;
+
     private Integer inDays;
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final DurationDto that = (DurationDto) o;
-        return Objects.equals(inDays, that.inDays);
+        DurationDto durationDto = (DurationDto) o;
+        return Objects.equals(id, durationDto.id);
     }
 
     @Override
-    public final int hashCode() {
-        return Objects.hash(inDays);
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

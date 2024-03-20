@@ -10,7 +10,6 @@ public interface PriceMapper {
 
     PriceDto priceToPriceDto(Price price);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "products", ignore = true)

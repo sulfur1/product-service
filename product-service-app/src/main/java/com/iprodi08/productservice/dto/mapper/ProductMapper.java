@@ -8,6 +8,7 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProductMapper {
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "summary", source = "summary")
     @Mapping(target = "description", source = "description")
     @Mapping(target = "priceDto", source = "price")
@@ -16,7 +17,6 @@ public interface ProductMapper {
     @Mapping(target = "discountDtos", source = "discounts")
     ProductDto productToProductDto(Product product);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "summary", source = "summary")

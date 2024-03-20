@@ -14,6 +14,8 @@ import java.util.Objects;
 @AllArgsConstructor
 public class DiscountDto {
 
+    private Long id;
+
     private Integer value;
 
     private OffsetDateTime dateTimeFrom;
@@ -30,15 +32,12 @@ public class DiscountDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final DiscountDto discountDto = (DiscountDto) o;
-        return Objects.equals(value, discountDto.value)
-                && Objects.equals(dateTimeFrom, discountDto.dateTimeFrom)
-                && Objects.equals(dateTimeUntil, discountDto.dateTimeUntil)
-                && Objects.equals(active, discountDto.active);
+        DiscountDto discountDto = (DiscountDto) o;
+        return Objects.equals(id, discountDto.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value, dateTimeFrom, dateTimeUntil, active);
+        return Objects.hash(id);
     }
 }

@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 public interface DiscountMapper {
     DiscountDto dicountToDiscountDto(Discount discount);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "products", ignore = true)

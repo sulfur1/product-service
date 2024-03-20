@@ -14,6 +14,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class ProductDto {
 
+    private Long id;
+
     private String summary;
 
     private String description;
@@ -34,17 +36,12 @@ public class ProductDto {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductDto productDto = (ProductDto) o;
-        return Objects.equals(summary, productDto.summary)
-                && Objects.equals(description, productDto.description)
-                && Objects.equals(priceDto, productDto.priceDto)
-                && Objects.equals(durationDto, productDto.durationDto)
-                && Objects.equals(active, productDto.active)
-                && Objects.equals(discountDtos, productDto.discountDtos);
+        ProductDto productDto = (ProductDto) o;
+        return Objects.equals(id, productDto.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(summary, description, priceDto, durationDto, active, discountDtos);
+        return Objects.hash(id);
     }
 }
