@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Getter
@@ -18,9 +18,9 @@ public class DiscountDto {
 
     private Integer value;
 
-    private OffsetDateTime dateTimeFrom;
+    private Instant dateTimeFrom;
 
-    private OffsetDateTime dateTimeUntil;
+    private Instant dateTimeUntil;
 
     private Boolean active;
 

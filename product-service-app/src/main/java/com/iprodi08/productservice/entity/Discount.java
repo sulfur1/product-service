@@ -15,7 +15,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +28,12 @@ import java.util.List;
 @Entity
 @Table(name = "discounts")
 public class Discount {
+
     @Id
-    @SequenceGenerator(name = "discounts_seq", sequenceName = "discounts_id_seq", allocationSize = 1)
+    @SequenceGenerator(
+            name = "discounts_seq",
+            sequenceName = "discounts_id_seq",
+            allocationSize = 1)
     @GeneratedValue(generator = "discounts_seq")
     private Long id;
 
@@ -38,10 +41,10 @@ public class Discount {
     private Integer value;
 
     @Column(name = "datetime_from")
-    private OffsetDateTime dateTimeFrom;
+    private Instant dateTimeFrom;
 
     @Column(name = "datetime_until")
-    private OffsetDateTime dateTimeUntil;
+    private Instant dateTimeUntil;
 
     @Column
     private Boolean active;
@@ -55,9 +58,22 @@ public class Discount {
     private Instant updatedAt;
 
     @ManyToMany(mappedBy = "discounts")
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    public Discount(Integer value, OffsetDateTime dateTimeFrom, OffsetDateTime dateTimeUntil, Boolean active) {
-        this(null, value, dateTimeFrom, dateTimeUntil, active, null, null, new ArrayList<>());
+    public static Discount createNewDiscount(
+            Long id,
+            Integer value,
+            Instant dateTimeFrom,
+            Instant dateTimeUntil,
+            Boolean active
+    ) {
+        Discount discount = new Discount();
+        discount.setId(id);
+        discount.setValue(value);
+        discount.setDateTimeFrom(dateTimeFrom);
+        discount.setDateTimeUntil(dateTimeUntil);
+        discount.setActive(active);
+
+        return discount;
     }
 }

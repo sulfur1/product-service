@@ -4,8 +4,6 @@ import com.iprodi08.productservice.dto.ProductDto;
 import com.iprodi08.productservice.dto.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Product;
 import org.mapstruct.factory.Mappers;
-
-import java.util.Collections;
 import java.util.List;
 
 public final class ProductTestData {
@@ -16,21 +14,29 @@ public final class ProductTestData {
 
     public static final Long PRODUCT_ID_3 = PRODUCT_ID_1 + 2;
 
+    public static final Long PRODUCT_NEW_ID = PRODUCT_ID_1 + 3;
+
     public static final Long NOT_EXIST_ID = 110L;
 
-    public static final Product PRODUCT_1 = new Product(
-            PRODUCT_ID_1, "Product1", "This is product 1",
-            null, null, true, null, null, Collections.emptyList()
+    public static final Product PRODUCT_1 = Product.createNewProduct(
+            PRODUCT_ID_1,
+            "Product1",
+            "This is product 1",
+            true
     );
 
-    public static final Product PRODUCT_2 = new Product(
-            PRODUCT_ID_2, "Product2", "This is product 2",
-            null, null, true, null, null, Collections.emptyList()
+    public static final Product PRODUCT_2 = Product.createNewProduct(
+            PRODUCT_ID_2,
+            "Product2",
+            "This is product 2",
+            true
     );
 
-    public static final Product PRODUCT_3 = new Product(
-            PRODUCT_ID_3, "Product3", "This is product 3",
-            null, null, false, null, null, Collections.emptyList()
+    public static final Product PRODUCT_3 = Product.createNewProduct(
+            PRODUCT_ID_3,
+            "Product3",
+            "This is product 3",
+            false
     );
 
     private static final ProductMapper MAPPER = Mappers.getMapper(ProductMapper.class);
@@ -39,8 +45,12 @@ public final class ProductTestData {
     }
 
     public static Product getNew() {
-        return new Product("Product3", "This is product 3",
-                null, null, false);
+        return Product.createNewProduct(
+                PRODUCT_NEW_ID,
+                "NewProduct",
+                "This is new product",
+                true
+        );
     }
     public static List<Product> getProducts() {
         return List.of(PRODUCT_1, PRODUCT_2, PRODUCT_3);
