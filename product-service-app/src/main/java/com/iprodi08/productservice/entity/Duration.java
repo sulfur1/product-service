@@ -28,8 +28,12 @@ import java.util.List;
 @Entity
 @Table(name = "durations")
 public class Duration {
+
     @Id
-    @SequenceGenerator(name = "durations_seq", sequenceName = "durations_id_seq", allocationSize = 1)
+    @SequenceGenerator(
+            name = "durations_seq",
+            sequenceName = "durations_id_seq",
+            allocationSize = 1)
     @GeneratedValue(generator = "durations_seq")
     private Long id;
 
@@ -45,9 +49,13 @@ public class Duration {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "duration")
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    public Duration(Integer inDays) {
-        this(null, inDays, null, null, new ArrayList<>());
+    public static Duration createNewDuration(Long id, Integer inDays) {
+        Duration duration = new Duration();
+        duration.setId(id);
+        duration.setInDays(inDays);
+
+        return duration;
     }
 }

@@ -32,6 +32,7 @@ import java.util.List;
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @SequenceGenerator(name = "products_seq", sequenceName = "products_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "products_seq")
@@ -68,9 +69,15 @@ public class Product {
             joinColumns = { @JoinColumn(name = "product_id") },
             inverseJoinColumns = { @JoinColumn(name = "discount_id") }
     )
-    private List<Discount> discounts;
+    private List<Discount> discounts = new ArrayList<>();
 
-    public Product(String summary, String description, Price price, Duration duration, Boolean active) {
-        this(null, summary, description, price, duration, active, null, null, new ArrayList<>());
+    public static Product createNewProduct(Long id, String summary, String description, Boolean active) {
+        Product product = new Product();
+        product.setId(id);
+        product.setSummary(summary);
+        product.setDescription(description);
+        product.setActive(active);
+
+        return product;
     }
 }

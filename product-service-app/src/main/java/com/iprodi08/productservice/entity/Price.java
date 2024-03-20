@@ -32,8 +32,12 @@ import java.util.List;
 @Entity
 @Table(name = "prices")
 public class Price {
+
     @Id
-    @SequenceGenerator(name = "prices_seq", sequenceName = "prices_id_seq", allocationSize = 1)
+    @SequenceGenerator(
+            name = "prices_seq",
+            sequenceName = "prices_id_seq",
+            allocationSize = 1)
     @GeneratedValue(generator = "prices_seq")
     private Long id;
 
@@ -53,9 +57,14 @@ public class Price {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "price")
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 
-    public Price(BigDecimal value, Currency currency) {
-        this(null, value, currency, null, null, new ArrayList<>());
+    public static Price createNewPrice(Long id, BigDecimal value, Currency currency) {
+        Price price = new Price();
+        price.setId(id);
+        price.setValue(value);
+        price.setCurrency(currency);
+
+        return price;
     }
 }
