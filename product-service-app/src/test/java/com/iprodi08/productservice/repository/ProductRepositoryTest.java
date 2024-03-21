@@ -139,10 +139,28 @@ class ProductRepositoryTest {
     @Test
     void getProductByIdWithDiscounts() {
         //given
+
         //when
 
         Optional<Product> product = productRepository
-                .getProductByIdWithDiscounts(actualProduct1.getId(), actualDiscount2.getId());
+                .getProductByIdWithDiscounts(actualProduct1.getId());
+
+        //then
+
+        assertTrue(product.isPresent());
+        assertEquals(product.get().getId(), actualProduct1.getId());
+        assertThat(product.get().getDiscounts()).isNotEmpty();
+        assertThat(product.get().getDiscounts()).hasSize(2);
+    }
+
+    @Test
+    void getProductByIdWithDiscountById() {
+        //given
+
+        //when
+
+        Optional<Product> product = productRepository
+                .getProductByIdWithDiscountById(actualProduct1.getId(), actualDiscount2.getId());
 
         //then
 
