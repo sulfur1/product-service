@@ -1,5 +1,7 @@
 package com.iprodi08.productservice.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,14 +18,19 @@ public class ProductDto {
 
     private Long id;
 
+    @NotBlank(message = "For summary require non null")
     private String summary;
 
+    @NotBlank(message = "For summary require non null")
     private String description;
 
+    @NotNull
     private PriceDto priceDto;
 
+    @NotNull
     private DurationDto durationDto;
 
+    @NotNull
     private Boolean active;
 
     private List<DiscountDto> discountDtos;
