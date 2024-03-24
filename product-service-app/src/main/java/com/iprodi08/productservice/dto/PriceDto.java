@@ -1,6 +1,9 @@
 package com.iprodi08.productservice.dto;
 
 import com.iprodi08.productservice.entity.enumType.Currency;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +20,12 @@ public class PriceDto {
 
     private Long id;
 
+    @NotNull
+    @DecimalMin(value = "0.0", inclusive = false)
+    @Digits(integer = 5, fraction = 2)
     private BigDecimal value;
 
+    @NotNull
     private Currency currency;
 
     @Override

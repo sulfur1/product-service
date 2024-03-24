@@ -1,5 +1,7 @@
 package com.iprodi08.productservice.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,11 @@ public class DurationDto {
 
     private Long id;
 
+    @NotNull
+    @Min(
+            value = 1,
+            message = "Duration of product in days must be greater or than equals to 1"
+    )
     private Integer inDays;
 
     @Override
