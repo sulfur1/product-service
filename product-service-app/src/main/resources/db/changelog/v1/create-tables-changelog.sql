@@ -1,5 +1,10 @@
+create sequence prices_id_seq start 1;
+create sequence durations_id_seq start 1;
+create sequence products_id_seq start 1;
+create sequence discounts_id_seq start 1;
+
 create table prices (
-    id                  bigserial primary key,
+    id                  bigint primary key,
     price_value     	numeric(5,2) not null,
     currency 	        character(3) not null,
     created_at          timestamp with time zone not null,
@@ -7,14 +12,14 @@ create table prices (
 );
 
 create table durations (
-    id                bigserial primary key,
+    id                bigint primary key,
     in_days           integer not null,
     created_at        timestamp with time zone not null,
     updated_at        timestamp with time zone not null
 );
 
 create table products (
-    id          bigserial primary key,
+    id          bigint primary key,
     summary     varchar (100) not null,
     description text not null,
     price_id    bigint not null,
@@ -31,7 +36,7 @@ add constraint summary_description_c
 unique (summary, description);
 
 create table discounts (
-    id          	bigserial primary key,
+    id          	bigint primary key,
     discount_value  integer not null,
 	datetime_from  	timestamp with time zone not null,
     datetime_until  timestamp with time zone not null,
@@ -41,8 +46,8 @@ create table discounts (
 );
 
 create table products_discounts (
-    product_id          	bigserial not null,
-    discount_id     		bigserial not null,
+    product_id          	bigint not null,
+    discount_id     		bigint not null,
 	constraint product_discount_pk primary key(product_id, discount_id),
 	constraint discount_to_product_fk foreign key (product_id) references products (id),
 	constraint product_to_discount_fk foreign key (discount_id) references discounts (id)
