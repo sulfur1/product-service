@@ -1,5 +1,6 @@
 package com.iprodi08.productservice.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
@@ -63,7 +64,7 @@ public class Product {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "products_discounts",
             joinColumns = { @JoinColumn(name = "product_id") },

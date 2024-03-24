@@ -6,6 +6,8 @@ import com.iprodi08.productservice.entity.Product;
 import com.iprodi08.productservice.repository.filter.OperationSpecification;
 import com.iprodi08.productservice.repository.filter.ProductSpecification;
 import com.iprodi08.productservice.repository.filter.SearchCriteria;
+import com.iprodi08.productservice.test_data.DurationTestData;
+import com.iprodi08.productservice.test_data.PriceTestData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,21 +18,11 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import java.util.List;
 
-import static com.iprodi08.productservice.test_data.DurationTestData.DURATION_1;
-import static com.iprodi08.productservice.test_data.PriceTestData.PRICE_1;
-import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_ID_1;
-import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_ID_2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class SpecificationTest {
-
-    private static final String RESET_SEQ = """
-            ALTER SEQUENCE prices_id_seq RESTART WITH 1;
-            ALTER SEQUENCE durations_id_seq RESTART WITH 1;
-            ALTER SEQUENCE products_id_seq RESTART WITH 1;
-            """;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -43,28 +35,32 @@ class SpecificationTest {
     @Autowired
     private DurationRepository durationRepository;
 
+    private Product actualProduct1;
+
+    private Product actualProduct2;
+
     @BeforeEach
     void setUp() {
-        Price expectedPrice = priceRepository.save(PRICE_1);
-        Duration expectedDuration = durationRepository.save(DURATION_1);
+        Price actualPrice = priceRepository.save(PriceTestData.getNew());
+        Duration actualDuration = durationRepository.save(DurationTestData.getNew());
 
-        Product actualProduct1 = Product.createNewProduct(
-                PRODUCT_ID_1,
+        actualProduct1 = Product.createNewProduct(
+                null,
                 "Product1",
                 "This is product1",
-                true
+                false
         );
-        actualProduct1.setPrice(expectedPrice);
-        actualProduct1.setDuration(expectedDuration);
+        actualProduct1.setPrice(actualPrice);
+        actualProduct1.setDuration(actualDuration);
         productRepository.save(actualProduct1);
 
-        Product actualProduct2 = Product.createNewProduct(
-                PRODUCT_ID_2,
+        actualProduct2 = Product.createNewProduct(
+                null,
                 "product2",
                 "description",
-                false);
-        actualProduct2.setPrice(expectedPrice);
-        actualProduct2.setDuration(expectedDuration);
+                true);
+        actualProduct2.setPrice(actualPrice);
+        actualProduct2.setDuration(actualDuration);
         productRepository.save(actualProduct2);
 
     }
@@ -77,11 +73,12 @@ class SpecificationTest {
                 "prices",
                 "durations");
 
-        jdbcTemplate.execute(RESET_SEQ);
     }
 
     @Test
     void findAllProductsByName() {
+        //given
+
         String key = "summary";
         String value = "product2";
 
@@ -89,28 +86,40 @@ class SpecificationTest {
                 key, OperationSpecification.EQUALS, value);
         ProductSpecification specification = new ProductSpecification(criteria);
 
+        //when
+
         Product expected = productRepository.findAll(specification).getFirst();
 
+        //then
+
         assertThat(expected).isNotNull();
-        assertEquals(expected.getId(), PRODUCT_ID_2);
+        assertEquals(expected.getId(), actualProduct2.getId());
     }
 
     @Test
     void findAllProductsByActiveFalse() {
+        //given
+
         String key = "active";
         Boolean active = false;
         SearchCriteria criteria = new SearchCriteria(
                 key, OperationSpecification.EQUALS, String.valueOf(active));
         ProductSpecification specification = new ProductSpecification(criteria);
 
+        //when
+
         Product expected = productRepository.findAll(specification).getFirst();
 
+        //then
+
         assertThat(expected).isNotNull();
-        assertEquals(expected.getId(), PRODUCT_ID_2);
+        assertEquals(expected.getId(), actualProduct1.getId());
     }
 
     @Test
     void findAllProductsByNameIfNameIsEmpty() {
+        //given
+
         String key = "summary";
         String value = "";
 
@@ -118,7 +127,11 @@ class SpecificationTest {
                 key, OperationSpecification.EQUALS, value);
         ProductSpecification specification = new ProductSpecification(criteria);
 
+        //when
+
         List<Product> expected = productRepository.findAll(specification);
+
+        //then
 
         assertThat(expected).isNotEmpty();
         assertThat(expected).hasSize(2);
@@ -126,6 +139,8 @@ class SpecificationTest {
 
     @Test
     void findAllProductsIfNull() {
+        //given
+
         String key = "summary";
         String value = null;
 
@@ -133,7 +148,11 @@ class SpecificationTest {
                 key, OperationSpecification.EQUALS, value);
         ProductSpecification specification = new ProductSpecification(criteria);
 
+        //when
+
         List<Product> expected = productRepository.findAll(specification);
+
+        //then
 
         assertThat(expected).isEmpty();
     }
