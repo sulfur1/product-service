@@ -7,6 +7,7 @@ import com.iprodi08.productservice.dto.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
+import com.iprodi08.productservice.repository.PriceRepository;
 import com.iprodi08.productservice.repository.ProductRepository;
 import com.iprodi08.productservice.repository.filter.ProductSpecification;
 import com.iprodi08.productservice.repository.filter.SearchCriteria;
@@ -28,11 +29,15 @@ public class SimpleProductService implements ProductService {
 
     private final ProductRepository productRepository;
 
+    private final PriceRepository priceRepository;
+
     @Autowired
-    public SimpleProductService(final ProductMapper mapper,
-                                final ProductRepository productRepository) {
+    public SimpleProductService(ProductMapper mapper,
+                                ProductRepository productRepository,
+                                PriceRepository priceRepository) {
         this.mapper = mapper;
         this.productRepository = productRepository;
+        this.priceRepository = priceRepository;
     }
 
     @Override
@@ -84,16 +89,19 @@ public class SimpleProductService implements ProductService {
     }
 
     @Override
+    @Transactional
     public Optional<ProductDto> updatePriceOfProduct(ProductDto productDto) {
-        return productRepository
-                .findById(productDto.getId())
-                .map(product -> {
+        Long productId = productDto.getId();
+        productRepository
+                .findById(productId)
+                .ifPresent(product -> {
                     PriceDto priceDto = productDto.getPriceDto();
-                    Price price = Price.createNewPrice(null, priceDto.getValue(), priceDto.getCurrency());
-                    return  mapper.productToProductDto(
-                            productRepository.updatePriceForProductById(productDto.getId(), price)
+                    Price price = priceRepository.save(
+                            Price.createNewPrice(null, priceDto.getValue(), priceDto.getCurrency())
                     );
+                    productRepository.updatePriceForProductById(productId, price);
                 });
+        return getProductById(productId);
     }
 
     @Override

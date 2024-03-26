@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Transactional(readOnly = true)
+
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     @Query("""
@@ -33,7 +33,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("""
             SELECT p FROM Product p
             JOIN FETCH p.discounts d
-            WHERE p.id=:product_id
+            WHERE p.id = :product_id
             """)
     Optional<Product> getProductByIdWithDiscounts(
             @Param("product_id") Long productId
@@ -56,7 +56,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             SET p.price = :price_value
             WHERE p.id = :id
             """)
-    Product updatePriceForProductById(
+    void updatePriceForProductById(
             @Param("id") Long productId,
             @Param("price_value") Price price
     );
