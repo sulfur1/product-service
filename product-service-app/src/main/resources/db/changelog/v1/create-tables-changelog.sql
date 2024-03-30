@@ -30,6 +30,13 @@ create table products (
     constraint price_fk foreign key (price_id) references prices (id),
     constraint duration_fk foreign key (duration_id) references durations (id)
 );
+create index products_to_prices_idx on products (price_id);
+
+create index products_to_durations_idx on products (duration_id);
+
+create index products_summary_idx on products (summary);
+
+create index products_active_idx on products (active);
 
 alter table products
 add constraint summary_description_c
@@ -52,3 +59,7 @@ create table products_discounts (
 	constraint discount_to_product_fk foreign key (product_id) references products (id),
 	constraint product_to_discount_fk foreign key (discount_id) references discounts (id)
 );
+
+create index products_discounts_to_products_idx on products_discounts (product_id);
+
+create index products_discounts_to_discounts_idx on products_discounts (discount_id);
