@@ -56,6 +56,10 @@ public final class ProductTestData {
         return List.of(PRODUCT_1, PRODUCT_2, PRODUCT_3);
     }
 
+    public static List<Product> getProductsWithDiscounts() {
+        return List.of(PRODUCT_1, PRODUCT_2, PRODUCT_3);
+    }
+
     public static ProductDto getProductDto(Product product) {
         return MAPPER.productToProductDto(product);
     }

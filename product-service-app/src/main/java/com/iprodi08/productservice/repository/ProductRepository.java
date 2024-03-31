@@ -33,9 +33,18 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("""
             SELECT p FROM Product p
             JOIN FETCH p.discounts d
-            WHERE p.id=:product_id AND d.id = :discount_id
+            WHERE p.id=:product_id
             """)
     Optional<Product> getProductByIdWithDiscounts(
+            @Param("product_id") Long productId
+    );
+
+    @Query("""
+            SELECT p FROM Product p
+            JOIN FETCH p.discounts d
+            WHERE p.id=:product_id AND d.id = :discount_id
+            """)
+    Optional<Product> getProductByIdWithDiscountById(
             @Param("product_id") Long productId,
             @Param("discount_id") Long discountId
     );
@@ -59,7 +68,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             SET p.active = :active
             WHERE p.id = :id
             """)
-    Product updateActiveOfProductById(
+    void updateActiveOfProductById(
             @Param("id") Long productId,
             @Param("active") Boolean active
     );
