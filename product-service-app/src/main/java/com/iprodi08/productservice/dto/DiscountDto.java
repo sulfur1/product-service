@@ -2,13 +2,12 @@ package com.iprodi08.productservice.dto;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -22,19 +21,16 @@ public class DiscountDto {
     private Long id;
 
     @NotNull(message = "For discount value require non null")
-    @PositiveOrZero(
-            message = "Discount value must be greater than or equal to sign 0"
-    )
-    @Max(
-            value = 100,
-            message = "Discount value must be greater than or equal to sign 0"
-    )
+    @Range(
+            max = 100,
+            message = """
+                    Discount value must be:
+                    greater than or equal to sign 0 and less than or equal to sign 100
+                    """)
     private Integer value;
 
     @NotNull
-    @FutureOrPresent(
-            message = "Discount start date and time value is in the future or present"
-    )
+    @FutureOrPresent
     private Instant dateTimeFrom;
 
     @NotNull

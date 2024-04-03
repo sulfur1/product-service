@@ -46,11 +46,11 @@ public class Product {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "price_id", nullable = false)
+    @JoinColumn(name = "price_id")
     private Price price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "duration_id", nullable = false)
+    @JoinColumn(name = "duration_id")
     private Duration duration;
 
     @Column
@@ -64,7 +64,7 @@ public class Product {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "products_discounts",
             joinColumns = { @JoinColumn(name = "product_id") },

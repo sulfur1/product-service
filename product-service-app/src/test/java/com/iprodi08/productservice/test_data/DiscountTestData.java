@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class DiscountTestData {
 
-    public static final String TIME_ZONE = "+03:00";
+    public static final String TIME_ZONE = "+00:00";
 
     public static final Long DISCOUNT_ID_1 = 1L;
 
@@ -49,21 +49,21 @@ public final class DiscountTestData {
 
     public static final Instant DISCOUNT_1_DATE_TIME_UNTIL = LocalDateTime
             .now()
-            .minusDays(DISCOUNT_1_ACTIVE_TO_1)
+            .plusDays(DISCOUNT_1_ACTIVE_TO_1)
             .toInstant(ZoneOffset.of(TIME_ZONE));
 
     public static final Long DISCOUNT_2_ACTIVE_TO_2 = 5L;
 
     public static final Instant DISCOUNT_2_DATE_TIME_UNTIL = LocalDateTime
             .now()
-            .minusDays(DISCOUNT_2_ACTIVE_TO_2)
+            .plusDays(DISCOUNT_2_ACTIVE_TO_2)
             .toInstant(ZoneOffset.of(TIME_ZONE));
 
     public static final Long DISCOUNT_3_ACTIVE_TO_3 = 8L;
 
     public static final Instant DISCOUNT_3_DATE_TIME_UNTIL = LocalDateTime
             .now()
-            .minusDays(DISCOUNT_3_ACTIVE_TO_3)
+            .plusDays(DISCOUNT_3_ACTIVE_TO_3)
             .toInstant(ZoneOffset.of(TIME_ZONE));
 
     public static final Integer DISCOUNT_1_VALUE = 50;
@@ -104,7 +104,10 @@ public final class DiscountTestData {
         return Discount.createNewDiscount(
                 null,
                 DISCOUNT_NEW_VALUE,
-                DISCOUNT_3_DATE_TIME_FROM,
+                LocalDateTime
+                        .now()
+                        .plusHours(1)
+                        .toInstant(ZoneOffset.of(TIME_ZONE)),
                 DISCOUNT_3_DATE_TIME_UNTIL,
                 true
         );

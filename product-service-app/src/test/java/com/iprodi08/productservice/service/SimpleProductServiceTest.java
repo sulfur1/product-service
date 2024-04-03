@@ -6,6 +6,7 @@ import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
+import com.iprodi08.productservice.repository.PriceRepository;
 import com.iprodi08.productservice.repository.ProductRepository;
 import com.iprodi08.productservice.repository.filter.ProductSpecification;
 import com.iprodi08.productservice.test_data.DiscountTestData;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.DirtiesContext;
 
 
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.Optional;
 import static com.iprodi08.productservice.test_data.DiscountTestData.DISCOUNT_ID_1;
 import static com.iprodi08.productservice.test_data.DiscountTestData.DISCOUNT_ID_2;
 import static com.iprodi08.productservice.test_data.DiscountTestData.getDiscountDto;
+import static com.iprodi08.productservice.test_data.PriceTestData.PRICE_1;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_1;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_2;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_ID_1;
@@ -42,17 +45,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@DirtiesContext
 class SimpleProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private PriceRepository priceRepository;
 
     @Spy
     private ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
@@ -177,14 +183,14 @@ class SimpleProductServiceTest {
     void updatePriceOfProduct() {
         //given
 
-        Product created = ProductTestData.getNew();
         Price updatePrice = PriceTestData.getNew();
         Product updatedProduct = ProductTestData.getNew();
         updatedProduct.setId(PRODUCT_ID_1);
         updatedProduct.setPrice(updatePrice);
         ProductDto updatedDto = getProductDto(updatedProduct);
-        when(productRepository.findById(PRODUCT_ID_1)).thenReturn(Optional.of(created));
-        when(productRepository.updatePriceForProductById(anyLong(), any(Price.class))).thenReturn(updatedProduct);
+        when(productRepository.findById(PRODUCT_ID_1)).thenReturn(Optional.of(updatedProduct));
+        when(priceRepository.save(any(Price.class))).thenReturn(PRICE_1);
+        doNothing().when(productRepository).updatePriceForProductById(PRODUCT_ID_1, PRICE_1);
 
         //when
 
