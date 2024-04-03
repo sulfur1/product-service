@@ -2,7 +2,6 @@ package com.iprodi08.productservice.service;
 
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.ProductDto;
-import com.iprodi08.productservice.entity.Product;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public interface ProductService {
 
     List<ProductDto> getAllProductsByName(Pageable pageable, String name);
 
-    Product createProduct(ProductDto productDto);
+    ProductDto createProduct(ProductDto productDto);
 
     Optional<ProductDto> updatePriceOfProduct(ProductDto productDto);
 

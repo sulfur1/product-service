@@ -2,6 +2,10 @@ package com.iprodi08.productservice.repository;
 
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,6 +18,18 @@ import java.util.Optional;
 
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+
+    @Override
+    @EntityGraph(attributePaths = {"price", "duration", "discounts"})
+    Page<Product> findAll(Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = {"price", "duration", "discounts"})
+    Page<Product> findAll(Specification<Product> spec, Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = {"price", "duration", "discounts"})
+    Optional<Product> findById(@Param("product_id") Long productId);
 
     @Query("""
             SELECT p FROM Product p

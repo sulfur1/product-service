@@ -8,7 +8,6 @@ import org.mapstruct.factory.Mappers;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 
 public final class DiscountTestData {
 
@@ -20,30 +19,13 @@ public final class DiscountTestData {
 
     public static final Long DISCOUNT_ID_3 = DISCOUNT_ID_1 + 2;
 
-    public static final Long DISCOUNT_NEW_ID = DISCOUNT_ID_1 + 3;
-
     public static final Long NOT_EXIST_ID = 110L;
 
-    public static final Long DISCOUNT_1_ACTIVE_OFFSET_1 = 10L;
+    public static final Long DISCOUNT_1_ACTIVE_OFFSET_1 = 1L;
 
-    public static final Instant DISCOUNT_1_DATE_TIME_FROM = LocalDateTime
-            .now()
-            .minusDays(DISCOUNT_1_ACTIVE_OFFSET_1)
-            .toInstant(ZoneOffset.of(TIME_ZONE));
+    public static final Long DISCOUNT_2_ACTIVE_OFFSET_2 = 2L;
 
-    public static final Long DISCOUNT_2_ACTIVE_OFFSET_2 = 25L;
-
-    public static final Instant DISCOUNT_2_DATE_TIME_FROM = LocalDateTime
-            .now()
-            .minusDays(DISCOUNT_2_ACTIVE_OFFSET_2)
-            .toInstant(ZoneOffset.of(TIME_ZONE));
-
-    public static final Long DISCOUNT_3_ACTIVE_OFFSET_3 = 15L;
-
-    public static final Instant DISCOUNT_3_DATE_TIME_FROM = LocalDateTime
-            .now()
-            .minusDays(DISCOUNT_3_ACTIVE_OFFSET_3)
-            .toInstant(ZoneOffset.of(TIME_ZONE));
+    public static final Long DISCOUNT_3_ACTIVE_OFFSET_3 = 3L;
 
     public static final Long DISCOUNT_1_ACTIVE_TO_1 = 3L;
 
@@ -66,55 +48,69 @@ public final class DiscountTestData {
             .plusDays(DISCOUNT_3_ACTIVE_TO_3)
             .toInstant(ZoneOffset.of(TIME_ZONE));
 
-    public static final Integer DISCOUNT_1_VALUE = 50;
+    public static final Integer DISCOUNT_1_VALUE = 5;
 
-    public static final Integer DISCOUNT_2_VALUE = 30;
+    public static final Integer DISCOUNT_2_VALUE = 10;
 
-    public static final Integer DISCOUNT_3_VALUE = 48;
+    public static final Integer DISCOUNT_3_VALUE = 20;
 
-    public static final Integer DISCOUNT_NEW_VALUE = 60;
-
-    public static final Discount DISCOUNT_1 = Discount.createNewDiscount(
-            DISCOUNT_ID_1,
-            DISCOUNT_1_VALUE,
-            DISCOUNT_1_DATE_TIME_FROM,
-            DISCOUNT_1_DATE_TIME_UNTIL,
-            true);
-
-    public static final Discount DISCOUNT_2 = Discount.createNewDiscount(
-            DISCOUNT_ID_2,
-            DISCOUNT_2_VALUE,
-            DISCOUNT_2_DATE_TIME_FROM,
-            DISCOUNT_2_DATE_TIME_UNTIL,
-            true);
-
-    public static final Discount DISCOUNT_3 = Discount.createNewDiscount(
-            DISCOUNT_ID_3,
-            DISCOUNT_3_VALUE,
-            DISCOUNT_3_DATE_TIME_FROM,
-            DISCOUNT_3_DATE_TIME_UNTIL,
-            true);
+    public static final Integer DISCOUNT_NEW_VALUE = 3;
 
     private static final DiscountMapper MAPPER = Mappers.getMapper(DiscountMapper.class);
 
     private DiscountTestData() {
     }
 
-    public static Discount getNew() {
+    public static Discount getNewDiscount1() {
         return Discount.createNewDiscount(
                 null,
-                DISCOUNT_NEW_VALUE,
+                DISCOUNT_1_VALUE,
                 LocalDateTime
                         .now()
-                        .plusHours(1)
+                        .plusHours(DISCOUNT_1_ACTIVE_OFFSET_1)
+                        .toInstant(ZoneOffset.of(TIME_ZONE)),
+                DISCOUNT_1_DATE_TIME_UNTIL,
+                true
+        );
+    }
+
+    public static Discount getNewDiscount2() {
+        return Discount.createNewDiscount(
+                null,
+                DISCOUNT_2_VALUE,
+                LocalDateTime
+                        .now()
+                        .plusHours(DISCOUNT_2_ACTIVE_OFFSET_2)
+                        .toInstant(ZoneOffset.of(TIME_ZONE)),
+                DISCOUNT_2_DATE_TIME_UNTIL,
+                true
+        );
+    }
+
+    public static Discount getNewDiscount3() {
+        return Discount.createNewDiscount(
+                null,
+                DISCOUNT_3_VALUE,
+                LocalDateTime
+                        .now()
+                        .plusHours(DISCOUNT_3_ACTIVE_OFFSET_3)
                         .toInstant(ZoneOffset.of(TIME_ZONE)),
                 DISCOUNT_3_DATE_TIME_UNTIL,
                 true
         );
     }
 
-    public static List<Discount> getDiscounts() {
-        return List.of(DISCOUNT_1, DISCOUNT_2, DISCOUNT_3);
+    public static Discount getNewDiscount4() {
+        return Discount.createNewDiscount(
+                null,
+                DISCOUNT_NEW_VALUE,
+                LocalDateTime
+                        .now()
+                        .plusHours(DISCOUNT_3_ACTIVE_OFFSET_3)
+                        .toInstant(ZoneOffset.of(TIME_ZONE)),
+                DISCOUNT_3_DATE_TIME_UNTIL,
+                true
+        );
     }
 
     public static DiscountDto getDiscountDto(Discount discount) {

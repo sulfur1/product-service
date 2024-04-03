@@ -44,7 +44,7 @@ public final class DurationTestData {
     private DurationTestData() {
     }
 
-    public static Duration getNew() {
+    public static Duration getNewDuration() {
         return Duration.createNewDuration(null, IN_DAYS_3);
     }
 

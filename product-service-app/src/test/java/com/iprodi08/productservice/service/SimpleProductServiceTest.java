@@ -6,12 +6,12 @@ import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
+import com.iprodi08.productservice.repository.DiscountRepository;
+import com.iprodi08.productservice.repository.DurationRepository;
 import com.iprodi08.productservice.repository.PriceRepository;
 import com.iprodi08.productservice.repository.ProductRepository;
 import com.iprodi08.productservice.repository.filter.ProductSpecification;
 import com.iprodi08.productservice.test_data.DiscountTestData;
-import com.iprodi08.productservice.test_data.DurationTestData;
-import com.iprodi08.productservice.test_data.PriceTestData;
 import com.iprodi08.productservice.test_data.ProductTestData;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -31,7 +31,11 @@ import java.util.Optional;
 import static com.iprodi08.productservice.test_data.DiscountTestData.DISCOUNT_ID_1;
 import static com.iprodi08.productservice.test_data.DiscountTestData.DISCOUNT_ID_2;
 import static com.iprodi08.productservice.test_data.DiscountTestData.getDiscountDto;
-import static com.iprodi08.productservice.test_data.PriceTestData.PRICE_1;
+import static com.iprodi08.productservice.test_data.DiscountTestData.getNewDiscount1;
+import static com.iprodi08.productservice.test_data.DurationTestData.DURATION_ID_1;
+import static com.iprodi08.productservice.test_data.DurationTestData.getNewDuration;
+import static com.iprodi08.productservice.test_data.PriceTestData.PRICE_ID_1;
+import static com.iprodi08.productservice.test_data.PriceTestData.getNewPrice1;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_1;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_2;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_ID_1;
@@ -59,6 +63,12 @@ class SimpleProductServiceTest {
 
     @Mock
     private PriceRepository priceRepository;
+
+    @Mock
+    private DurationRepository durationRepository;
+
+    @Mock
+    private DiscountRepository discountRepository;
 
     @Spy
     private ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
@@ -162,35 +172,43 @@ class SimpleProductServiceTest {
     void createProduct() {
         //given
 
-        Price price = PriceTestData.getNew();
-        Duration duration = DurationTestData.getNew();
-        Product created = ProductTestData.getNew();
+        Price price = getNewPrice1();
+        price.setId(PRICE_ID_1);
+        Duration duration = getNewDuration();
+        duration.setId(DURATION_ID_1);
+        Discount discount = getNewDiscount1();
+        discount.setId(DISCOUNT_ID_1);
+        Product created = ProductTestData.getNewProduct();
+        created.setId(PRODUCT_ID_1);
         created.setPrice(price);
         created.setDuration(duration);
+        created.setDiscounts(List.of(discount));
         ProductDto createdDto = getProductDto(created);
         when(productRepository.save(any(Product.class))).thenReturn(created);
 
         //when
 
-        Product expected = productService.createProduct(createdDto);
+        ProductDto expected = productService.createProduct(createdDto);
 
         //then
 
         assertThat(expected).isNotNull();
+        assertEquals(expected, createdDto);
     }
 
     @Test
     void updatePriceOfProduct() {
         //given
 
-        Price updatePrice = PriceTestData.getNew();
-        Product updatedProduct = ProductTestData.getNew();
+        Price updatePrice = getNewPrice1();
+        updatePrice.setId(PRICE_ID_1);
+        Product updatedProduct = ProductTestData.getNewProduct();
         updatedProduct.setId(PRODUCT_ID_1);
         updatedProduct.setPrice(updatePrice);
         ProductDto updatedDto = getProductDto(updatedProduct);
         when(productRepository.findById(PRODUCT_ID_1)).thenReturn(Optional.of(updatedProduct));
-        when(priceRepository.save(any(Price.class))).thenReturn(PRICE_1);
-        doNothing().when(productRepository).updatePriceForProductById(PRODUCT_ID_1, PRICE_1);
+        when(priceRepository.save(any(Price.class))).thenReturn(updatePrice);
+        doNothing().when(productRepository).updatePriceForProductById(PRODUCT_ID_1, updatePrice);
 
         //when
 
@@ -206,9 +224,9 @@ class SimpleProductServiceTest {
     void updatePriceOfProductNotFound() {
         //given
 
-        Price price = PriceTestData.getNew();
-        Duration duration = DurationTestData.getNew();
-        Product created = ProductTestData.getNew();
+        Price price = getNewPrice1();
+        Duration duration = getNewDuration();
+        Product created = ProductTestData.getNewProduct();
         created.setId(NOT_EXIST_ID);
         created.setPrice(price);
         created.setDuration(duration);
@@ -228,9 +246,9 @@ class SimpleProductServiceTest {
     void applyDiscountToProduct() {
         //given
 
-        Discount applyDiscount = DiscountTestData.getNew();
-        Discount discount = DiscountTestData.getNew();
-        Product product = ProductTestData.getNew();
+        Discount applyDiscount = DiscountTestData.getNewDiscount1();
+        Discount discount = DiscountTestData.getNewDiscount1();
+        Product product = ProductTestData.getNewProduct();
         product.getDiscounts().add(discount);
 
         when(productRepository.getProductByIdWithDiscounts(PRODUCT_ID_1)).thenReturn(Optional.of(product));
@@ -249,10 +267,10 @@ class SimpleProductServiceTest {
     void applyBulkDiscountToAllProducts() {
         //given
 
-        Discount applyDiscount = DiscountTestData.getNew();
-        Product productOne = ProductTestData.getNew();
+        Discount applyDiscount = DiscountTestData.getNewDiscount1();
+        Product productOne = ProductTestData.getNewProduct();
         productOne.getDiscounts().add(applyDiscount);
-        Product productTwo = ProductTestData.getNew();
+        Product productTwo = ProductTestData.getNewProduct();
         productTwo.getDiscounts().add(applyDiscount);
 
         when(productRepository.getAllProductsWithDiscounts()).thenReturn(List.of(productOne, productTwo));
@@ -304,8 +322,8 @@ class SimpleProductServiceTest {
     void activateDiscountForProduct() {
         //given
 
-        Discount discount = DiscountTestData.getNew();
-        Product product = ProductTestData.getNew();
+        Discount discount = DiscountTestData.getNewDiscount1();
+        Product product = ProductTestData.getNewProduct();
         product.getDiscounts().add(discount);
         when(productRepository
                 .getProductByIdWithDiscountById(PRODUCT_ID_3, DISCOUNT_ID_2))
@@ -325,8 +343,8 @@ class SimpleProductServiceTest {
     void diactivateDiscountForProduct() {
         //given
 
-        Discount discount = DiscountTestData.getNew();
-        Product product = ProductTestData.getNew();
+        Discount discount = DiscountTestData.getNewDiscount1();
+        Product product = ProductTestData.getNewProduct();
         product.getDiscounts().add(discount);
         when(productRepository
                 .getProductByIdWithDiscountById(PRODUCT_ID_3, DISCOUNT_ID_2))
