@@ -5,8 +5,11 @@ import com.iprodi08.productservice.dto.PriceDto;
 import com.iprodi08.productservice.dto.ProductDto;
 import com.iprodi08.productservice.dto.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Discount;
+import com.iprodi08.productservice.entity.Duration;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
+import com.iprodi08.productservice.repository.DiscountRepository;
+import com.iprodi08.productservice.repository.DurationRepository;
 import com.iprodi08.productservice.repository.PriceRepository;
 import com.iprodi08.productservice.repository.ProductRepository;
 import com.iprodi08.productservice.repository.filter.ProductSpecification;
@@ -18,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.iprodi08.productservice.repository.filter.OperationSpecification.EQUALS;
 
@@ -31,13 +33,21 @@ public class SimpleProductService implements ProductService {
 
     private final PriceRepository priceRepository;
 
+    private final DurationRepository durationRepository;
+
+    private final DiscountRepository discountRepository;
+
     @Autowired
     public SimpleProductService(ProductMapper mapper,
                                 ProductRepository productRepository,
-                                PriceRepository priceRepository) {
+                                PriceRepository priceRepository,
+                                DurationRepository durationRepository,
+                                DiscountRepository discountRepository) {
         this.mapper = mapper;
         this.productRepository = productRepository;
         this.priceRepository = priceRepository;
+        this.durationRepository = durationRepository;
+        this.discountRepository = discountRepository;
     }
 
     @Override
@@ -52,7 +62,7 @@ public class SimpleProductService implements ProductService {
         return productRepository.findAll(pageable)
                 .stream()
                 .map(mapper::productToProductDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -64,9 +74,10 @@ public class SimpleProductService implements ProductService {
 
         return  productRepository
                 .findAll(productSpecification, pageable)
+                .getContent()
                 .stream()
                 .map(mapper::productToProductDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -77,15 +88,23 @@ public class SimpleProductService implements ProductService {
 
         return  productRepository
                 .findAll(productSpecification, pageable)
+                .getContent()
                 .stream()
                 .map(mapper::productToProductDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     @Transactional
-    public Product createProduct(final ProductDto productDto) {
-        return productRepository.save(mapper.productDtoToProduct(productDto));
+    public ProductDto createProduct(final ProductDto productDto) {
+        Product create = mapper.productDtoToProduct(productDto);
+        Price price = priceRepository.save(create.getPrice());
+        Duration duration = durationRepository.save(create.getDuration());
+        List<Discount> discounts = discountRepository.saveAll(create.getDiscounts());
+        create.setPrice(price);
+        create.setDuration(duration);
+        create.setDiscounts(discounts);
+        return mapper.productToProductDto(productRepository.save(create));
     }
 
     @Override
@@ -116,7 +135,8 @@ public class SimpleProductService implements ProductService {
                             discountDto.getDateTimeUntil(),
                             discountDto.getActive()
                     );
-                    product.getDiscounts().add(discount);
+
+                    product.getDiscounts().add(discountRepository.save(discount));
                 });
     }
 
@@ -135,7 +155,7 @@ public class SimpleProductService implements ProductService {
                 discountDto.getDateTimeUntil(),
                 discountDto.getActive()
         );
-        products.forEach(product -> product.getDiscounts().add(discount));
+        products.forEach(product -> product.getDiscounts().add(discountRepository.save(discount)));
 
     }
 

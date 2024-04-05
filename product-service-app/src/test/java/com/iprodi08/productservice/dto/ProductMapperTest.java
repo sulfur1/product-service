@@ -5,14 +5,15 @@ import com.iprodi08.productservice.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 
-import static com.iprodi08.productservice.test_data.DiscountTestData.DISCOUNT_1;
 import static com.iprodi08.productservice.test_data.DiscountTestData.getDiscountDto;
-import static com.iprodi08.productservice.test_data.DurationTestData.DURATION_1;
+import static com.iprodi08.productservice.test_data.DiscountTestData.getNewDiscount1;
 import static com.iprodi08.productservice.test_data.DurationTestData.getDurationDto;
-import static com.iprodi08.productservice.test_data.PriceTestData.PRICE_1;
+import static com.iprodi08.productservice.test_data.DurationTestData.getNewDuration;
+import static com.iprodi08.productservice.test_data.PriceTestData.getNewPrice1;
 import static com.iprodi08.productservice.test_data.PriceTestData.getPriceDto;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest
+@DirtiesContext
 class ProductMapperTest {
 
     @Autowired
@@ -29,16 +31,16 @@ class ProductMapperTest {
     void giveProductDtoFromProduct() {
         //given
 
-        final PriceDto actualpriceDto = getPriceDto(PRICE_1);
+        final PriceDto actualpriceDto = getPriceDto(getNewPrice1());
 
-        final DurationDto actualDurationDto = getDurationDto(DURATION_1);
+        final DurationDto actualDurationDto = getDurationDto(getNewDuration());
 
-        final DiscountDto actualDiscountDto = getDiscountDto(DISCOUNT_1);
+        final DiscountDto actualDiscountDto = getDiscountDto(getNewDiscount1());
 
         final Product product = PRODUCT_1;
-        product.setPrice(PRICE_1);
-        product.setDuration(DURATION_1);
-        product.setDiscounts(List.of(DISCOUNT_1));
+        product.setPrice(getNewPrice1());
+        product.setDuration(getNewDuration());
+        product.setDiscounts(List.of(getNewDiscount1()));
 
         //when
 

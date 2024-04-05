@@ -44,7 +44,7 @@ public final class ProductTestData {
     private ProductTestData() {
     }
 
-    public static Product getNew() {
+    public static Product getNewProduct() {
         return Product.createNewProduct(
                 null,
                 "NewProduct",

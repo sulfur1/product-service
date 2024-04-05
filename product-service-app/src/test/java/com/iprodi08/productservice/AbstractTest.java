@@ -4,6 +4,7 @@ import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
+import com.iprodi08.productservice.repository.DiscountRepository;
 import com.iprodi08.productservice.repository.DurationRepository;
 import com.iprodi08.productservice.repository.PriceRepository;
 import com.iprodi08.productservice.repository.ProductRepository;
@@ -34,11 +35,16 @@ public abstract class AbstractTest {
     @Autowired
     protected DurationRepository durationRepository;
 
+    @Autowired
+    protected DiscountRepository discountRepository;
+
     protected Product actualProduct1;
 
     protected Product actualProduct2;
 
-    protected Price actualPrice;
+    protected Price actualPrice1;
+
+    protected Price actualPrice2;
 
     protected Duration actualDuration;
 
@@ -52,26 +58,29 @@ public abstract class AbstractTest {
 
     @BeforeEach
     void setUp() {
-        actualPrice = priceRepository.save(PriceTestData.getNew());
-        actualDuration = durationRepository.save(DurationTestData.getNew());
+        actualPrice1 = priceRepository.save(PriceTestData.getNewPrice1());
+        actualPrice2 = priceRepository.save(PriceTestData.getNewPrice2());
+        actualDuration = durationRepository.save(DurationTestData.getNewDuration());
+        actualDiscount1 = discountRepository.save(DiscountTestData.getNewDiscount1());
+        actualDiscount2 = discountRepository.save(DiscountTestData.getNewDiscount2());
         actualProduct1 = Product.createNewProduct(
                 null,
                 "Product1",
                 "This is product1",
-                true
+                false
         );
-        Discount discount1 = DiscountTestData.getNew();
-        Discount discount2 = DiscountTestData.getNew();
+        /*Discount discount1 = DiscountTestData.getNewDiscount1();
+        Discount discount2 = DiscountTestData.getNewDiscount2();*/
         List<Discount> discountsOfProduct1 = new ArrayList<>();
-        discountsOfProduct1.add(discount1);
-        discountsOfProduct1.add(discount2);
+        discountsOfProduct1.add(actualDiscount1);
+        discountsOfProduct1.add(actualDiscount2);
 
-        actualProduct1.setPrice(actualPrice);
+        actualProduct1.setPrice(actualPrice1);
         actualProduct1.setDuration(actualDuration);
         actualProduct1.setDiscounts(discountsOfProduct1);
         actualProduct1 = productRepository.save(actualProduct1);
-        actualDiscount1 = actualProduct1.getDiscounts().getFirst();
-        actualDiscount2 = actualProduct1.getDiscounts().getLast();
+        /*actualDiscount1 = actualProduct1.getDiscounts().getFirst();
+        actualDiscount2 = actualProduct1.getDiscounts().getLast();*/
 
 
         actualProduct2 = Product.createNewProduct(
@@ -79,18 +88,20 @@ public abstract class AbstractTest {
                 "Product2",
                 "This is product2",
                 true);
-        Discount discount3 = DiscountTestData.getNew();
-        Discount discount4 = DiscountTestData.getNew();
+        actualDiscount3 = discountRepository.save(DiscountTestData.getNewDiscount3());
+        actualDiscount4 = discountRepository.save(DiscountTestData.getNewDiscount4());
+        /*Discount discount3 = DiscountTestData.getNewDiscount3();
+        Discount discount4 = DiscountTestData.getNewDiscount4();*/
         List<Discount> discountsOfProduct2 = new ArrayList<>();
-        discountsOfProduct2.add(discount3);
-        discountsOfProduct2.add(discount4);
+        discountsOfProduct2.add(actualDiscount3);
+        discountsOfProduct2.add(actualDiscount4);
 
-        actualProduct2.setPrice(actualPrice);
+        actualProduct2.setPrice(actualPrice2);
         actualProduct2.setDuration(actualDuration);
         actualProduct2.setDiscounts(discountsOfProduct2);
         actualProduct2 = productRepository.save(actualProduct2);
-        actualDiscount3 = actualProduct2.getDiscounts().getFirst();
-        actualDiscount4 = actualProduct2.getDiscounts().getLast();
+        /*actualDiscount3 = actualProduct2.getDiscounts().getFirst();
+        actualDiscount4 = actualProduct2.getDiscounts().getLast();*/
 
     }
 

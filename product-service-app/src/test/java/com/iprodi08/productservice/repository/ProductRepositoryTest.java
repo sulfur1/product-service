@@ -1,15 +1,20 @@
 package com.iprodi08.productservice.repository;
 
 import com.iprodi08.productservice.AbstractTest;
+import com.iprodi08.productservice.dto.ProductDto;
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.Product;
 import com.iprodi08.productservice.test_data.PriceTestData;
+import com.iprodi08.productservice.test_data.ProductTestData;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +24,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DirtiesContext
 class ProductRepositoryTest extends AbstractTest {
+
+    @Test
+    void getAllProductUsedPageable() {
+        //given
+
+        List<ProductDto> actualProducts = Stream.of(actualProduct1, actualProduct2)
+                .map(ProductTestData::getProductDto)
+                .toList();
+
+        //when
+
+        Page<Product> productPage = productRepository.findAll(Pageable.ofSize(25));
+
+        //then
+
+        List<Product> products = productPage.getContent();
+        assertThat(products).isNotEmpty();
+        assertThat(products).hasSize(2);
+        List<ProductDto> expectedProducts = products.stream()
+                .map(ProductTestData::getProductDto)
+                .toList();
+        assertEquals(expectedProducts, actualProducts);
+    }
 
     @Test
     void getAllProductsWithDiscounts() {
@@ -101,7 +129,7 @@ class ProductRepositoryTest extends AbstractTest {
     void updatePriceForProductById() {
         //given
 
-        Price newPrice = priceRepository.save(PriceTestData.getNew());
+        Price newPrice = priceRepository.save(PriceTestData.getNewPrice1());
 
         //when
 
@@ -111,7 +139,7 @@ class ProductRepositoryTest extends AbstractTest {
 
         Optional<Product> updatedProduct = productRepository.findById(actualProduct2.getId());
         assertThat(updatedProduct).isNotEmpty();
-        assertNotEquals(updatedProduct.get().getPrice().getId(), actualPrice.getId());
+        assertNotEquals(updatedProduct.get().getPrice().getId(), actualPrice1.getId());
         assertEquals(updatedProduct.get().getPrice().getId(), newPrice.getId());
     }
 

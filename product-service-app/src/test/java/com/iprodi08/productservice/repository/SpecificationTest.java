@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DirtiesContext
 class SpecificationTest extends AbstractTest {
+
     @Test
     void findAllProductsByName() {
         //given
@@ -41,7 +42,7 @@ class SpecificationTest extends AbstractTest {
         //given
 
         String key = "active";
-        Boolean active = true;
+        Boolean active = false;
         SearchCriteria criteria = new SearchCriteria(
                 key, OperationSpecification.EQUALS, String.valueOf(active));
         ProductSpecification specification = new ProductSpecification(criteria);

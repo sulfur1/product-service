@@ -2,7 +2,6 @@ package com.iprodi08.productservice.controller;
 
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.ProductDto;
-import com.iprodi08.productservice.entity.Product;
 import com.iprodi08.productservice.error.NotFoundException;
 import com.iprodi08.productservice.service.ProductService;
 import jakarta.validation.Valid;
@@ -39,7 +38,7 @@ public class ProductController {
 
     @PostMapping(value = "/products", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@Valid @RequestBody ProductDto productDto) {
+    public ProductDto createProduct(@Valid @RequestBody ProductDto productDto) {
         return productService.createProduct(productDto);
     }
 
@@ -52,9 +51,10 @@ public class ProductController {
 
         if (active) {
             productService.acivateProduct(productId);
-        } else {
-            productService.diactivateProduct(productId);
+            return;
         }
+        productService.diactivateProduct(productId);
+
     }
 
     @PutMapping(value = "/products", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -79,7 +79,7 @@ public class ProductController {
     }
 
     @PatchMapping(value = "/products/all/discounts/{discountId}/id/change_active")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void changeActiveDiscountForAllProducts(
             @PathVariable @Min(1L) long discountId,
             @RequestParam("active") boolean active
@@ -87,14 +87,15 @@ public class ProductController {
 
         if (active) {
             productService.activateDiscountForAllProducts(discountId);
-        } else {
-            productService.diactivateDiscountForAllProducts(discountId);
+            return;
         }
+        productService.diactivateDiscountForAllProducts(discountId);
+
     }
 
     @PatchMapping(value = "/products/{productId}/id/discounts/{discountId}/id/change_active")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeActiveDiscountForProducts(
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void changeActiveDiscountForProduct(
             @PathVariable @Min(1L) long productId,
             @PathVariable @Min(1L) long discountId,
             @RequestParam("active") boolean active
@@ -102,9 +103,9 @@ public class ProductController {
 
         if (active) {
             productService.activateDiscountForProduct(discountId, productId);
-        } else {
-            productService.diactivateDiscountForProduct(discountId, productId);
+            return;
         }
+        productService.diactivateDiscountForProduct(discountId, productId);
     }
 
     @GetMapping(value = "/products/all")
@@ -117,7 +118,9 @@ public class ProductController {
     @GetMapping(value = "/products/all/sort-discount")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductDto> getAllProductsBySortDiscount(
-            @SortDefault(sort = "discounts.discount_value") @PageableDefault(size = 25) Pageable pageable) {
+            @SortDefault(sort = "discounts.value")
+            @PageableDefault(size = 25) Pageable pageable
+    ) {
 
         return productService.getAllProducts(pageable);
     }
@@ -125,7 +128,9 @@ public class ProductController {
     @GetMapping(value = "/products/all/sort-price")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductDto> getAllProductsBySortPrice(
-            @SortDefault(sort = "price.price_value") @PageableDefault(size = 25) Pageable pageable) {
+            @SortDefault(sort = "price.value")
+            @PageableDefault(size = 25) Pageable pageable
+    ) {
 
         return productService.getAllProducts(pageable);
     }
