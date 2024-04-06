@@ -28,13 +28,14 @@ public class FindProductById {
     @When("client wants to find a product with id {long}")
     public void clientWantsFindProductWithId(long productId) throws IOException, InterruptedException {
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/" + endpoint + productId))
-                .GET()
-                .build();
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/" + endpoint + productId))
+                    .GET()
+                    .build();
 
-        this.response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            this.response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
 
     }
 
