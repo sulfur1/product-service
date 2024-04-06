@@ -1,4 +1,4 @@
-package com.iprodi08.productservice;
+package com.iprodi08.productservice.controller;
 
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-public abstract class AbstractTest {
+public class AbstractTest {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
@@ -69,6 +69,8 @@ public abstract class AbstractTest {
                 "This is product1",
                 false
         );
+        /*Discount discount1 = DiscountTestData.getNewDiscount1();
+        Discount discount2 = DiscountTestData.getNewDiscount2();*/
         List<Discount> discountsOfProduct1 = new ArrayList<>();
         discountsOfProduct1.add(actualDiscount1);
         discountsOfProduct1.add(actualDiscount2);
@@ -77,6 +79,8 @@ public abstract class AbstractTest {
         actualProduct1.setDuration(actualDuration);
         actualProduct1.setDiscounts(discountsOfProduct1);
         actualProduct1 = productRepository.save(actualProduct1);
+        /*actualDiscount1 = actualProduct1.getDiscounts().getFirst();
+        actualDiscount2 = actualProduct1.getDiscounts().getLast();*/
 
 
         actualProduct2 = Product.createNewProduct(
@@ -86,6 +90,8 @@ public abstract class AbstractTest {
                 true);
         actualDiscount3 = discountRepository.save(DiscountTestData.getNewDiscount3());
         actualDiscount4 = discountRepository.save(DiscountTestData.getNewDiscount4());
+        /*Discount discount3 = DiscountTestData.getNewDiscount3();
+        Discount discount4 = DiscountTestData.getNewDiscount4();*/
         List<Discount> discountsOfProduct2 = new ArrayList<>();
         discountsOfProduct2.add(actualDiscount3);
         discountsOfProduct2.add(actualDiscount4);
@@ -94,6 +100,8 @@ public abstract class AbstractTest {
         actualProduct2.setDuration(actualDuration);
         actualProduct2.setDiscounts(discountsOfProduct2);
         actualProduct2 = productRepository.save(actualProduct2);
+        /*actualDiscount3 = actualProduct2.getDiscounts().getFirst();
+        actualDiscount4 = actualProduct2.getDiscounts().getLast();*/
 
     }
 

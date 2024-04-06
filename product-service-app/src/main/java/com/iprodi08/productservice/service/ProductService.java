@@ -25,9 +25,9 @@ public interface ProductService {
 
     void diactivateProduct(long productId);
 
-    void applyDiscountToProduct(long productId, DiscountDto discountDto);
+    Optional<DiscountDto> applyDiscountToProduct(long productId, DiscountDto discountDto);
 
-    void applyBulkDiscountToAllProducts(DiscountDto discountDto);
+    Optional<DiscountDto> applyBulkDiscountToAllProducts(DiscountDto discountDto);
 
     void activateDiscountForAllProducts(long discountId);
 

@@ -4,8 +4,9 @@ import com.iprodi08.productservice.dto.PriceDto;
 import com.iprodi08.productservice.entity.Price;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PriceMapper {
 
     PriceDto priceToPriceDto(Price price);

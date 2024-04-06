@@ -1,8 +1,9 @@
 package com.iprodi08.productservice.service;
 
 import com.iprodi08.productservice.dto.DiscountDto;
-import com.iprodi08.productservice.dto.PriceDto;
 import com.iprodi08.productservice.dto.ProductDto;
+import com.iprodi08.productservice.dto.mapper.DiscountMapper;
+import com.iprodi08.productservice.dto.mapper.PriceMapper;
 import com.iprodi08.productservice.dto.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
@@ -27,7 +28,11 @@ import static com.iprodi08.productservice.repository.filter.OperationSpecificati
 @Service
 public class SimpleProductService implements ProductService {
 
-    private final ProductMapper mapper;
+    private final ProductMapper productMapper;
+
+    private final DiscountMapper discountMapper;
+
+    private final PriceMapper priceMapper;
 
     private final ProductRepository productRepository;
 
@@ -38,12 +43,16 @@ public class SimpleProductService implements ProductService {
     private final DiscountRepository discountRepository;
 
     @Autowired
-    public SimpleProductService(ProductMapper mapper,
+    public SimpleProductService(ProductMapper productMapper,
+                                DiscountMapper discountMapper,
+                                PriceMapper priceMapper,
                                 ProductRepository productRepository,
                                 PriceRepository priceRepository,
                                 DurationRepository durationRepository,
                                 DiscountRepository discountRepository) {
-        this.mapper = mapper;
+        this.productMapper = productMapper;
+        this.discountMapper = discountMapper;
+        this.priceMapper = priceMapper;
         this.productRepository = productRepository;
         this.priceRepository = priceRepository;
         this.durationRepository = durationRepository;
@@ -54,14 +63,14 @@ public class SimpleProductService implements ProductService {
     public Optional<ProductDto> getProductById(long productId) {
         return  productRepository
                 .findById(productId)
-                .map(mapper::productToProductDto);
+                .map(productMapper::productToProductDto);
     }
 
     @Override
     public List<ProductDto> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .stream()
-                .map(mapper::productToProductDto)
+                .map(productMapper::productToProductDto)
                 .toList();
     }
 
@@ -76,7 +85,7 @@ public class SimpleProductService implements ProductService {
                 .findAll(productSpecification, pageable)
                 .getContent()
                 .stream()
-                .map(mapper::productToProductDto)
+                .map(productMapper::productToProductDto)
                 .toList();
     }
 
@@ -90,73 +99,67 @@ public class SimpleProductService implements ProductService {
                 .findAll(productSpecification, pageable)
                 .getContent()
                 .stream()
-                .map(mapper::productToProductDto)
+                .map(productMapper::productToProductDto)
                 .toList();
     }
 
     @Override
     @Transactional
     public ProductDto createProduct(final ProductDto productDto) {
-        Product create = mapper.productDtoToProduct(productDto);
+        Product create = productMapper.productDtoToProduct(productDto);
         Price price = priceRepository.save(create.getPrice());
         Duration duration = durationRepository.save(create.getDuration());
         List<Discount> discounts = discountRepository.saveAll(create.getDiscounts());
         create.setPrice(price);
         create.setDuration(duration);
         create.setDiscounts(discounts);
-        return mapper.productToProductDto(productRepository.save(create));
+        return productMapper.productToProductDto(productRepository.save(create));
     }
 
     @Override
     @Transactional
     public Optional<ProductDto> updatePriceOfProduct(ProductDto productDto) {
         Long productId = productDto.getId();
-        productRepository
+        return productRepository
                 .findById(productId)
-                .ifPresent(product -> {
-                    PriceDto priceDto = productDto.getPriceDto();
+                .map(product -> {
                     Price price = priceRepository.save(
-                            Price.createNewPrice(null, priceDto.getValue(), priceDto.getCurrency())
+                            priceMapper.priceDtoToPrice(productDto.getPriceDto())
                     );
                     productRepository.updatePriceForProductById(productId, price);
-                });
-        return getProductById(productId);
-    }
-
-    @Override
-    @Transactional
-    public void applyDiscountToProduct(long productId, DiscountDto discountDto) {
-        productRepository.getProductByIdWithDiscounts(productId)
-                .ifPresent(product -> {
-                    Discount discount = Discount.createNewDiscount(
-                            null,
-                            discountDto.getValue(),
-                            discountDto.getDateTimeFrom(),
-                            discountDto.getDateTimeUntil(),
-                            discountDto.getActive()
+                    return productMapper.productToProductDto(
+                            productRepository.findById(productId).get()
                     );
-
-                    product.getDiscounts().add(discountRepository.save(discount));
                 });
     }
 
     @Override
     @Transactional
-    public void applyBulkDiscountToAllProducts(DiscountDto discountDto) {
+    public Optional<DiscountDto> applyDiscountToProduct(long productId, DiscountDto discountDto) {
+        return productRepository.getProductByIdWithDiscounts(productId)
+                .map(product -> {
+                    Discount created = discountRepository.save(
+                            discountMapper.discountDtoToDiscount(discountDto)
+                    );
+                    product.getDiscounts().add(created);
+                    return discountMapper.dicountToDiscountDto(created);
+                });
+    }
+
+    @Override
+    @Transactional
+    public Optional<DiscountDto> applyBulkDiscountToAllProducts(DiscountDto discountDto) {
         List<Product> products = productRepository.getAllProductsWithDiscounts();
         if (products.isEmpty()) {
-            return;
+            return Optional.empty();
         }
 
-        Discount discount = Discount.createNewDiscount(
-                null,
-                discountDto.getValue(),
-                discountDto.getDateTimeFrom(),
-                discountDto.getDateTimeUntil(),
-                discountDto.getActive()
+        Discount created = discountRepository.save(
+                discountMapper.discountDtoToDiscount(discountDto)
         );
-        products.forEach(product -> product.getDiscounts().add(discountRepository.save(discount)));
+        products.forEach(product -> product.getDiscounts().add(created));
 
+        return Optional.of(discountMapper.dicountToDiscountDto(created));
     }
 
     @Override

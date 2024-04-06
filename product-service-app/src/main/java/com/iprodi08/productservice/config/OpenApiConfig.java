@@ -29,14 +29,7 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder()
                 .group("REST API")
                 .pathsToMatch("/api/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi actuatorApi() {
-        return GroupedOpenApi.builder()
-                .group("Actuator")
-                .pathsToMatch("/actuator/**")
+                .pathsToExclude("/actuator/**")
                 .build();
     }
 }
