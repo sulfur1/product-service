@@ -201,21 +201,28 @@ class ProductControllerTest extends AbstractTest {
         Integer discountValue = 10;
         Discount discount = DiscountTestData.getNewDiscount1();
         discount.setValue(discountValue);
-        String request = mapper.writeValueAsString(getDiscountDto(discount));
+        DiscountDto actual = getDiscountDto(discount);
+        String requestJson = JsonUtil.writeValue(actual);
 
         //when
 
-        mvc.perform(put(
+        MvcResult result = mvc.perform(put(
                 BASE_URL + "/products/{productId}/id/apply_discount",
                         actualProduct2.getId()
                 )
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(request))
+                .content(requestJson))
                 .andDo(print())
 
         //then
-                .andExpect(status().isAccepted());
+                .andExpect(status().isAccepted())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
+        String responseJson = result.getResponse().getContentAsString();
+        DiscountDto discountDto = JsonUtil.readValue(responseJson, DiscountDto.class);
+        actual.setId(discountDto.getId());
+        assertEquals(actual, discountDto);
         Optional<Product> productWithDiscounts = productRepository
                 .getProductByIdWithDiscounts(actualProduct2.getId());
         assertThat(productWithDiscounts.get().getDiscounts()).hasSize(3);
@@ -228,21 +235,28 @@ class ProductControllerTest extends AbstractTest {
         Integer discountValue = 10;
         Discount discount = DiscountTestData.getNewDiscount1();
         discount.setValue(discountValue);
-        String request = mapper.writeValueAsString(getDiscountDto(discount));
+        DiscountDto actual = getDiscountDto(discount);
+        String requestJson = JsonUtil.writeValue(actual);
 
         //when
 
-        mvc.perform(put(
+        MvcResult result = mvc.perform(put(
                         BASE_URL + "/products/all/apply_discount",
                         actualDiscount2.getId()
                 )
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(request))
+                        .content(requestJson))
                 .andDo(print())
 
         //then
-                .andExpect(status().isAccepted());
+                .andExpect(status().isAccepted())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
+        String responseJson = result.getResponse().getContentAsString();
+        DiscountDto discountDto = JsonUtil.readValue(responseJson, DiscountDto.class);
+        actual.setId(discountDto.getId());
+        assertEquals(actual, discountDto);
         List<Product> products = productRepository.getAllProductsWithDiscounts();
         List<Discount> discounts = products.stream()
                 .flatMap(product -> product.getDiscounts().stream())
@@ -287,12 +301,16 @@ class ProductControllerTest extends AbstractTest {
         //then
                 .andExpect(status().isAccepted());
 
-        List<ProductDto> expected = productRepository.getAllProductsWithDiscounts()
+        List<Discount> expected = productRepository.getAllProductsWithDiscounts()
                 .stream()
-                .map(ProductTestData::getProductDto)
+                .flatMap(product -> product.getDiscounts().stream())
+                .filter(discount1 -> discount1.getId().equals(created.getId()))
                 .toList();
 
-
+        for (Discount d : expected) {
+            assertEquals(d.getId(), created.getId());
+            assertEquals(d.getActive(), active);
+        }
     }
 
     @Test

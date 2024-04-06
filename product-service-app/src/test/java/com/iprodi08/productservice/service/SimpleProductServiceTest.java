@@ -1,6 +1,9 @@
 package com.iprodi08.productservice.service;
 
+import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.ProductDto;
+import com.iprodi08.productservice.dto.mapper.DiscountMapper;
+import com.iprodi08.productservice.dto.mapper.PriceMapper;
 import com.iprodi08.productservice.dto.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
@@ -72,6 +75,12 @@ class SimpleProductServiceTest {
 
     @Spy
     private ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
+
+    @Spy
+    private PriceMapper priceMapper = Mappers.getMapper(PriceMapper.class);
+
+    @Spy
+    private DiscountMapper discountMapper = Mappers.getMapper(DiscountMapper.class);
 
     @InjectMocks
     private SimpleProductService productService;
@@ -246,21 +255,29 @@ class SimpleProductServiceTest {
     void applyDiscountToProduct() {
         //given
 
-        Discount applyDiscount = DiscountTestData.getNewDiscount1();
         Discount discount = DiscountTestData.getNewDiscount1();
         Product product = ProductTestData.getNewProduct();
         product.getDiscounts().add(discount);
+        DiscountDto actual = getDiscountDto(discount);
 
         when(productRepository.getProductByIdWithDiscounts(PRODUCT_ID_1)).thenReturn(Optional.of(product));
+        when(discountRepository.save(any(Discount.class))).thenReturn(discount);
 
         //when
 
-        productService.applyDiscountToProduct(PRODUCT_ID_1, getDiscountDto(applyDiscount));
+        Optional<DiscountDto> expected = productService.applyDiscountToProduct(
+                PRODUCT_ID_1,
+                actual
+        );
 
         //then
 
-        verify(productRepository, times(1))
-                .getProductByIdWithDiscounts(PRODUCT_ID_1);
+        assertThat(expected).isNotEmpty();
+        assertEquals(actual.getValue(), expected.get().getValue());
+        assertEquals(actual.getActive(), expected.get().getActive());
+        assertEquals(actual.getDateTimeFrom(), expected.get().getDateTimeFrom());
+        assertEquals(actual.getDateTimeUntil(), expected.get().getDateTimeUntil());
+
     }
 
     @Test
@@ -272,17 +289,21 @@ class SimpleProductServiceTest {
         productOne.getDiscounts().add(applyDiscount);
         Product productTwo = ProductTestData.getNewProduct();
         productTwo.getDiscounts().add(applyDiscount);
-
+        DiscountDto actual = getDiscountDto(applyDiscount);
         when(productRepository.getAllProductsWithDiscounts()).thenReturn(List.of(productOne, productTwo));
+        when(discountRepository.save(any(Discount.class))).thenReturn(applyDiscount);
 
         //when
 
-        productService.applyBulkDiscountToAllProducts(getDiscountDto(applyDiscount));
+        Optional<DiscountDto> expected = productService.applyBulkDiscountToAllProducts(actual);
 
         //then
 
-        verify(productRepository, times(1))
-                .getAllProductsWithDiscounts();
+        assertThat(expected).isNotEmpty();
+        assertEquals(actual.getValue(), expected.get().getValue());
+        assertEquals(actual.getActive(), expected.get().getActive());
+        assertEquals(actual.getDateTimeFrom(), expected.get().getDateTimeFrom());
+        assertEquals(actual.getDateTimeUntil(), expected.get().getDateTimeUntil());
     }
 
     @Test

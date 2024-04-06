@@ -4,8 +4,9 @@ import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.entity.Discount;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DiscountMapper {
     DiscountDto dicountToDiscountDto(Discount discount);
 
