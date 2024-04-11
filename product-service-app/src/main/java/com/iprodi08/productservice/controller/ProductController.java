@@ -81,7 +81,11 @@ public class ProductController {
     @PutMapping(value = "/products", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ProductDto updatePriceOfProduct(@Valid @RequestBody ProductDto productDto) {
-        return productService.updatePriceOfProduct(productDto).get();
+        return productService.updatePriceOfProduct(productDto)
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("Product by id: %s not found", productDto.getId())
+                        )
+                );
     }
 
     @Operation(
@@ -93,24 +97,34 @@ public class ProductController {
     })
     @PutMapping(value = "/products/{productId}/id/apply_discount")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void applyDiscountToProduct(
+    public DiscountDto applyDiscountToProduct(
             @PathVariable @Min(1L) long productId,
             @RequestBody @Valid DiscountDto discountDto
     ) {
-        productService.applyDiscountToProduct(productId, discountDto);
+        return productService.applyDiscountToProduct(productId, discountDto)
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                String.format("Product by id: %s not found", productId)
+                        )
+                );
     }
 
     @Operation(
-            summary = "Apply discount to all product",
-            description = "Apply and return discount to all product"
+            summary = "Apply discount to all products",
+            description = "Apply and return discount to all products"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Apply successfully")
     })
     @PutMapping(value = "/products/all/apply_discount", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void applyBulkDiscountForAllProducts(@Valid @RequestBody DiscountDto discountDto) {
-        productService.applyBulkDiscountToAllProducts(discountDto);
+    public DiscountDto applyBulkDiscountForAllProducts(@Valid @RequestBody DiscountDto discountDto) {
+        return productService.applyBulkDiscountToAllProducts(discountDto)
+                .orElseThrow(
+                        () -> new NotFoundException(
+                                "Products not to be founded"
+                        )
+                );
     }
 
     @Operation(

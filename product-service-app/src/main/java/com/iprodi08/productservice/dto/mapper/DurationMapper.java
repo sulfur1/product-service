@@ -4,8 +4,9 @@ import com.iprodi08.productservice.dto.DurationDto;
 import com.iprodi08.productservice.entity.Duration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 
-@Mapper
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DurationMapper {
 
     DurationDto durationToDurationDto(Duration duration);
