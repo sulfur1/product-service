@@ -1,10 +1,11 @@
 package com.iprodi08.productservice.service;
 
 import com.iprodi08.productservice.dto.DiscountDto;
+import com.iprodi08.productservice.dto.PriceDto;
 import com.iprodi08.productservice.dto.ProductDto;
-import com.iprodi08.productservice.dto.mapper.DiscountMapper;
-import com.iprodi08.productservice.dto.mapper.PriceMapper;
-import com.iprodi08.productservice.dto.mapper.ProductMapper;
+import com.iprodi08.productservice.mapper.DiscountMapper;
+import com.iprodi08.productservice.mapper.PriceMapper;
+import com.iprodi08.productservice.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
 import com.iprodi08.productservice.entity.Price;
@@ -17,15 +18,15 @@ import com.iprodi08.productservice.repository.filter.ProductSpecification;
 import com.iprodi08.productservice.test_data.DiscountTestData;
 import com.iprodi08.productservice.test_data.ProductTestData;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.annotation.DirtiesContext;
 
 
 import java.util.List;
@@ -39,6 +40,7 @@ import static com.iprodi08.productservice.test_data.DurationTestData.DURATION_ID
 import static com.iprodi08.productservice.test_data.DurationTestData.getNewDuration;
 import static com.iprodi08.productservice.test_data.PriceTestData.PRICE_ID_1;
 import static com.iprodi08.productservice.test_data.PriceTestData.getNewPrice1;
+import static com.iprodi08.productservice.test_data.PriceTestData.getPriceDto;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_1;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_2;
 import static com.iprodi08.productservice.test_data.ProductTestData.PRODUCT_ID_1;
@@ -57,8 +59,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@DirtiesContext
+@ExtendWith(MockitoExtension.class)
 class SimpleProductServiceTest {
 
     @Mock
@@ -209,24 +210,24 @@ class SimpleProductServiceTest {
     void updatePriceOfProduct() {
         //given
 
-        Price updatePrice = getNewPrice1();
-        updatePrice.setId(PRICE_ID_1);
+        Price price = getNewPrice1();
+        price.setId(PRICE_ID_1);
         Product updatedProduct = ProductTestData.getNewProduct();
         updatedProduct.setId(PRODUCT_ID_1);
-        updatedProduct.setPrice(updatePrice);
+        updatedProduct.setPrice(price);
         ProductDto updatedDto = getProductDto(updatedProduct);
         when(productRepository.findById(PRODUCT_ID_1)).thenReturn(Optional.of(updatedProduct));
-        when(priceRepository.save(any(Price.class))).thenReturn(updatePrice);
-        doNothing().when(productRepository).updatePriceForProductById(PRODUCT_ID_1, updatePrice);
+        when(priceRepository.save(any(Price.class))).thenReturn(price);
+        doNothing().when(productRepository).updatePriceForProductById(PRODUCT_ID_1, price);
 
         //when
 
         Optional<ProductDto> expected = productService.updatePriceOfProduct(updatedDto);
 
         //then
-
+        PriceDto updatedPriceDto = getPriceDto(price);
         assertTrue(expected.isPresent());
-        assertEquals(expected.get().getPriceDto().getCurrency(), updatePrice.getCurrency());
+        assertEquals(expected.get().getPriceDto().getCurrency(), updatedPriceDto.getCurrency());
     }
 
     @Test
@@ -402,17 +403,18 @@ class SimpleProductServiceTest {
     void activateProductIfProductNotFound() {
         //given
 
-        when(productRepository.findById(PRODUCT_ID_2)).thenReturn(Optional.empty());
-        doNothing().when(productRepository).updateActiveOfProductById(NOT_EXIST_ID, true);
+        when(productRepository.findById(NOT_EXIST_ID)).thenReturn(Optional.empty());
 
         //when
 
-        productService.acivateProduct(PRODUCT_ID_2);
+        productService.acivateProduct(NOT_EXIST_ID);
 
         //then
 
+        verify(productRepository, times(1))
+                .findById(NOT_EXIST_ID);
         verify(productRepository, times(0))
-                .updateActiveOfProductById(PRODUCT_ID_2, true);
+                .updateActiveOfProductById(NOT_EXIST_ID, true);
     }
 
     @Test

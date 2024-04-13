@@ -1,7 +1,7 @@
 package com.iprodi08.productservice.test_data;
 
 import com.iprodi08.productservice.dto.DurationDto;
-import com.iprodi08.productservice.dto.mapper.DurationMapper;
+import com.iprodi08.productservice.mapper.DurationMapper;
 import com.iprodi08.productservice.entity.Duration;
 import org.mapstruct.factory.Mappers;
 import java.util.List;

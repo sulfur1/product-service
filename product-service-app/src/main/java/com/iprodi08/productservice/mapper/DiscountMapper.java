@@ -1,4 +1,4 @@
-package com.iprodi08.productservice.dto.mapper;
+package com.iprodi08.productservice.mapper;
 
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.entity.Discount;

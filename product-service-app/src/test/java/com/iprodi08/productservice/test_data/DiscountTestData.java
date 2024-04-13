@@ -1,7 +1,7 @@
 package com.iprodi08.productservice.test_data;
 
 import com.iprodi08.productservice.dto.DiscountDto;
-import com.iprodi08.productservice.dto.mapper.DiscountMapper;
+import com.iprodi08.productservice.mapper.DiscountMapper;
 import com.iprodi08.productservice.entity.Discount;
 import org.mapstruct.factory.Mappers;
 

@@ -1,7 +1,7 @@
 package com.iprodi08.productservice.test_data;
 
 import com.iprodi08.productservice.dto.ProductDto;
-import com.iprodi08.productservice.dto.mapper.ProductMapper;
+import com.iprodi08.productservice.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Product;
 import org.mapstruct.factory.Mappers;
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.iprodi08.productservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iprodi08.productservice.AbstractTest;
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.DurationDto;
 import com.iprodi08.productservice.dto.PriceDto;
@@ -36,6 +37,7 @@ import static com.iprodi08.productservice.test_data.DiscountTestData.getDiscount
 import static com.iprodi08.productservice.test_data.DiscountTestData.getNewDiscount1;
 import static com.iprodi08.productservice.test_data.DurationTestData.getNewDuration;
 import static com.iprodi08.productservice.test_data.PriceTestData.getNewPrice;
+import static com.iprodi08.productservice.test_data.PriceTestData.getPriceDto;
 import static com.iprodi08.productservice.test_data.ProductTestData.getProductDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @DirtiesContext
-class ProductControllerTest extends AbstractTest {
+class ITProductController extends AbstractTest {
 
     private static final String BASE_URL = "/api";
 
@@ -63,6 +65,7 @@ class ProductControllerTest extends AbstractTest {
     void createProduct() throws Exception {
         //given
         Price price = getNewPrice();
+        PriceDto actualPriceDto = getPriceDto(price);
         Duration duration = getNewDuration();
         Discount discount = getNewDiscount1();
         Product createProduct = Product.createNewProduct(
@@ -98,8 +101,8 @@ class ProductControllerTest extends AbstractTest {
         assertEquals(productDto.getActive(), createProduct.getActive());
 
         PriceDto priceDto = productDto.getPriceDto();
-        assertEquals(priceDto.getValue(), price.getValue());
-        assertEquals(priceDto.getCurrency(), price.getCurrency());
+        assertEquals(priceDto.getValue(), actualPriceDto.getValue());
+        assertEquals(priceDto.getCurrency(), actualPriceDto.getCurrency());
 
         DurationDto durationDto = productDto.getDurationDto();
         assertEquals(durationDto.getInDays(), duration.getInDays());

@@ -113,6 +113,7 @@
     <modules>
         <module>product-service-app</module>
 		<module>e2e</module>
+		<module>product-service-dto</module>
 	</modules>
 
 </project>

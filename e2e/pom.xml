@@ -60,7 +60,7 @@
         </dependency>
         <dependency>
             <groupId>com.iprodi08</groupId>
-            <artifactId>product-service-app</artifactId>
+            <artifactId>product-service-dto</artifactId>
             <version>0.0.1-SNAPSHOT</version>
 <!--            <scope>test</scope>-->
         </dependency>

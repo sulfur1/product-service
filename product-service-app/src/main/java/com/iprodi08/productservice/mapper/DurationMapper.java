@@ -1,18 +1,18 @@
-package com.iprodi08.productservice.dto.mapper;
+package com.iprodi08.productservice.mapper;
 
-import com.iprodi08.productservice.dto.PriceDto;
-import com.iprodi08.productservice.entity.Price;
+import com.iprodi08.productservice.dto.DurationDto;
+import com.iprodi08.productservice.entity.Duration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface PriceMapper {
+public interface DurationMapper {
 
-    PriceDto priceToPriceDto(Price price);
+    DurationDto durationToDurationDto(Duration duration);
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "products", ignore = true)
-    Price priceDtoToPrice(PriceDto priceDto);
+    Duration durationDtoToDuration(DurationDto durationDto);
 }
