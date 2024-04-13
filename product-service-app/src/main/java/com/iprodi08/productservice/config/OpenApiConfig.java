@@ -29,6 +29,7 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder()
                 .group("REST API")
                 .pathsToMatch("/api/**")
+                .pathsToExclude("/actuator/**")
                 .build();
     }
 }
