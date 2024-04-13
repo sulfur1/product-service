@@ -1,5 +1,9 @@
-package com.iprodi08.productservice.dto;
+package com.iprodi08.productservice.unit.dto;
 
+import com.iprodi08.productservice.dto.DiscountDto;
+import com.iprodi08.productservice.dto.DurationDto;
+import com.iprodi08.productservice.dto.PriceDto;
+import com.iprodi08.productservice.dto.ProductDto;
 import com.iprodi08.productservice.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Product;
 import org.junit.jupiter.api.Test;

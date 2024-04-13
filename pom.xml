@@ -75,7 +75,6 @@
 								<artifactId>lombok</artifactId>
 							</exclude>
 						</excludes>
-						<classifier>exec</classifier>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -102,6 +101,8 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
 		<testResources>
 			<testResource>
 				<directory>src/test/resources</directory>
@@ -115,5 +116,4 @@
 		<module>e2e</module>
 		<module>product-service-dto</module>
 	</modules>
-
 </project>
