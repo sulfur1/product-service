@@ -55,11 +55,7 @@
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>4.24.0</version>
                     <configuration>
-                        <changeLogFile>src/main/resources/db/changelog/main-changelog.xml</changeLogFile>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://localhost:5432/product_db</url>
-                        <username>postgres</username>
-                        <password>admin</password>
+						<propertyFile>liquibase.properties</propertyFile>
                     </configuration>
                     <dependencies>
                         <dependency>

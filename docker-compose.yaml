@@ -1,64 +1,122 @@
-version: '3.7'
+version: '3.8'
+
+networks:
+  microservices-network:
+    driver: bridge
+
 services:
-  db:
+  # Postgres database for customer-service
+  postgres-customer-db:
+    container_name: pr_postgres_customer
     image: postgres:latest
-    container_name: postgres_pr
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_DB: product_db
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    env_file:
+      - ./secrets/customer-db.env
     ports:
-      - "5432:5432"
-    networks:
-      - network
+      - 5432:5432
     volumes:
-      - pg_data:/var/lib/postgresql/data
-    secrets:
-      - postgres_password
+      - ./database-data/customers:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  # Postgres database for product-service
+  postgres-product-db:
+    container_name: pr_postgres_product
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./secrets/product-db.env
+    expose:
+      - 5433
+    ports:
+      - 5433:5432
+    command:
+      -p 5433
+    volumes:
+      - ./database-data/products:/var/lib/postgresql/data
+    networks:
+      - microservices-network
+
+  # Postgres database for inquiry-service
+  postgres-inquiry-db:
+    container_name: pr_postgres_inquiry
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./secrets/inquiry-db.env
+    expose:
+      - 5434
+    ports:
+      - 5434:5432
+    command:
+      -p 5434
+    volumes:
+      - ./database-data/inquiries:/var/lib/postgresql/data
+    networks:
+      - microservices-network
 
   pgAdmin:
-    container_name: pg_admin_pr
+    container_name: pr_pg_admin4
     image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_password
+    restart: always
+    env_file:
+      - ./secrets/pgadmin4.env
     volumes:
       - pgAdmin:/var/lib/pgadmin
     ports:
-      - "8888:80"
-    networks:
-      - network
+      - 8888:80
     depends_on:
-      - db
-    secrets:
-      - pgadmin_password
+      - postgres-customer-db
+      - postgres-product-db
+      - postgres-inquiry-db
+    networks:
+      - microservices-network
 
-  #app:
-    #image: product:latest
-    #container_name: product-service
-    #networks:
-      #- network
-    #ports:
-      #- 8080:8080
-    #environment:
-      #POSTGRES_HOST: db
-    #restart: always
-    #depends_on:
-      #- db
-      #- pgAdmin
+  #customer service application
+  customer-service:
+    image: customer:latest
+    container_name: pr-customer-service
+    env_file:
+      - ./secrets/customer-service.env
+    restart: always
+    ports:
+      - 8082:8080
+    networks:
+      - microservices-network
+    depends_on:
+      - postgres-customer-db
+      - pgAdmin
 
-networks:
-  network:
-    driver: bridge
+  #  product service application
+  product-service:
+    image: product:latest
+    container_name: pr-product-service
+    networks:
+      - microservices-network
+    ports:
+      - 8083:8787
+    env_file:
+      - ./secrets/product-service.env
+    restart: always
+    depends_on:
+      - postgres-product-db
+      - pgAdmin
+
+  #  inquiry service application
+  inquiry-service:
+    image: inquiry:latest
+    container_name: pr-inquiry-service
+    networks:
+      - microservices-network
+    ports:
+      - 8084:8787
+    env_file:
+      - ./secrets/inquiry-service.env
+    restart: always
+    depends_on:
+      - postgres-inquiry-db
+      - pgAdmin
 
 volumes:
-  pg_data:
+  database-data:
   pgAdmin:
-
-secrets:
-  postgres_password:
-    file: ./secrets/postgres_password.txt
-  pgadmin_password:
-    file: ./secrets/pgadmin_password.txt
-
