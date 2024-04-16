@@ -1,7 +1,6 @@
 package com.iprodi08.productservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iprodi08.productservice.AbstractTest;
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.DurationDto;
 import com.iprodi08.productservice.dto.PriceDto;
