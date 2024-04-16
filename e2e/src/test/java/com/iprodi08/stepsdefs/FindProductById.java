@@ -1,10 +1,11 @@
 package com.iprodi08.stepsdefs;
 
-import io.cucumber.java.en.Given;
+import com.iprodi08.productservice.dto.VersionDto;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.client.RestClient;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
-@TestPropertySource
+
 public class FindProductById {
 
     private HttpResponse response;
@@ -22,7 +23,28 @@ public class FindProductById {
     @Value("${base_url}")
     private String baseUrl;
 
-    @Given("Product endpoint {string} with http method GET available")
+    @Value("${app.version}")
+    private String appVersion;
+
+    @When("Product service is up and running")
+    public void productServiceIsUpAndRunning() {
+
+        //when
+
+        String actualAppVersion;
+        RestClient restClient = RestClient.create();
+        VersionDto versionDto = restClient.get()
+                .uri(baseUrl + "/api/info")
+                .retrieve()
+                .body(VersionDto.class);
+
+        actualAppVersion = versionDto.getAppVersion();
+
+        //then
+        assertThat(appVersion).isEqualTo(actualAppVersion);
+    }
+
+    @And("Product endpoint {string} with http method GET available")
     public void productEndpointWithHttpMethodGETAvailable(String endpointPart) {
 
         this.endpoint = endpointPart;
