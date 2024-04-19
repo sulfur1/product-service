@@ -1,6 +1,5 @@
 package com.iprodi08.productservice.dto;
 
-import com.iprodi08.productservice.entity.enumType.Currency;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +25,7 @@ public class PriceDto {
     private BigDecimal value;
 
     @NotNull
-    private Currency currency;
+    private CurrencyDto currency;
 
     @Override
     public boolean equals(Object o) {

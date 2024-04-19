@@ -1,7 +1,7 @@
 package com.iprodi08.productservice.test_data;
 
 import com.iprodi08.productservice.dto.PriceDto;
-import com.iprodi08.productservice.dto.mapper.PriceMapper;
+import com.iprodi08.productservice.mapper.PriceMapper;
 import com.iprodi08.productservice.entity.Price;
 import com.iprodi08.productservice.entity.enumType.Currency;
 import org.mapstruct.factory.Mappers;

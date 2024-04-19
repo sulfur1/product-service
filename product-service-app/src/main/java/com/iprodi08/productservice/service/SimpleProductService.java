@@ -2,9 +2,9 @@ package com.iprodi08.productservice.service;
 
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.ProductDto;
-import com.iprodi08.productservice.dto.mapper.DiscountMapper;
-import com.iprodi08.productservice.dto.mapper.PriceMapper;
-import com.iprodi08.productservice.dto.mapper.ProductMapper;
+import com.iprodi08.productservice.mapper.DiscountMapper;
+import com.iprodi08.productservice.mapper.PriceMapper;
+import com.iprodi08.productservice.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Discount;
 import com.iprodi08.productservice.entity.Duration;
 import com.iprodi08.productservice.entity.Price;

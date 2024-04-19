@@ -1,6 +1,6 @@
 package com.iprodi08.productservice.dto;
 
-import com.iprodi08.productservice.dto.mapper.ProductMapper;
+import com.iprodi08.productservice.mapper.ProductMapper;
 import com.iprodi08.productservice.entity.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
