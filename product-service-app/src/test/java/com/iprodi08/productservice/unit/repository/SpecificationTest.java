@@ -1,4 +1,4 @@
-package com.iprodi08.productservice.repository;
+package com.iprodi08.productservice.unit.repository;
 
 import com.iprodi08.productservice.AbstractTest;
 import com.iprodi08.productservice.entity.Product;

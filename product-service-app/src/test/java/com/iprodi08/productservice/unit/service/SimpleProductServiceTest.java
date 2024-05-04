@@ -1,4 +1,4 @@
-package com.iprodi08.productservice.service;
+package com.iprodi08.productservice.unit.service;
 
 import com.iprodi08.productservice.dto.DiscountDto;
 import com.iprodi08.productservice.dto.PriceDto;
@@ -15,6 +15,7 @@ import com.iprodi08.productservice.repository.DurationRepository;
 import com.iprodi08.productservice.repository.PriceRepository;
 import com.iprodi08.productservice.repository.ProductRepository;
 import com.iprodi08.productservice.repository.filter.ProductSpecification;
+import com.iprodi08.productservice.service.SimpleProductService;
 import com.iprodi08.productservice.test_data.DiscountTestData;
 import com.iprodi08.productservice.test_data.ProductTestData;
 import org.junit.jupiter.api.Test;

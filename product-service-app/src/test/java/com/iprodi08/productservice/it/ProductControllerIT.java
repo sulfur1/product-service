@@ -1,4 +1,4 @@
-package com.iprodi08.productservice.controller;
+package com.iprodi08.productservice.it;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iprodi08.productservice.AbstractTest;
@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @DirtiesContext
-class ITProductController extends AbstractTest {
+class ProductControllerIT extends AbstractTest {
 
     private static final String BASE_URL = "/api";
 
@@ -65,7 +65,6 @@ class ITProductController extends AbstractTest {
     void createProduct() throws Exception {
         //given
         Price price = getNewPrice();
-        PriceDto actualPriceDto = getPriceDto(price);
         Duration duration = getNewDuration();
         Discount discount = getNewDiscount1();
         Product createProduct = Product.createNewProduct(
@@ -101,6 +100,7 @@ class ITProductController extends AbstractTest {
         assertEquals(productDto.getActive(), createProduct.getActive());
 
         PriceDto priceDto = productDto.getPriceDto();
+        PriceDto actualPriceDto = getPriceDto(price);
         assertEquals(priceDto.getValue(), actualPriceDto.getValue());
         assertEquals(priceDto.getCurrency(), actualPriceDto.getCurrency());
 
@@ -174,7 +174,8 @@ class ITProductController extends AbstractTest {
     void updatePriceOfProduct() throws Exception {
         //given
 
-        BigDecimal priceValue = BigDecimal.valueOf(123.00);
+        double value = 123.00;
+        BigDecimal priceValue = BigDecimal.valueOf(value);
         Price updatedPrice = PriceTestData.getNewPrice1();
         updatedPrice.setValue(priceValue);
         actualProduct1.setPrice(updatedPrice);

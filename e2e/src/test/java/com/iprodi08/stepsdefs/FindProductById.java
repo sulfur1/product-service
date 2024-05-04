@@ -2,18 +2,20 @@ package com.iprodi08.stepsdefs;
 
 import com.iprodi08.productservice.dto.ProductDto;
 import com.iprodi08.productservice.dto.VersionDto;
+import com.iprodi08.stepsdefs.restclient.RestUtil;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.client.RestClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +23,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FindProductById {
 
-    private HttpResponse response;
+    private String stringErrResponse;
+
+    private ResponseEntity<ProductDto> responseProductEntity;
+
     private String endpoint;
 
     @Value("${base_url}")
@@ -31,18 +36,20 @@ public class FindProductById {
     private String appVersion;
 
     @When("Product service is up and running")
-    public void productServiceIsUpAndRunning() {
-
+    public void productServiceIsUpAndRunning()
+            throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         //when
 
         String actualAppVersion;
-        RestClient restClient = RestClient.create();
-        VersionDto versionDto = restClient.get()
-                .uri(baseUrl + "/api/info")
-                .retrieve()
-                .body(VersionDto.class);
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        actualAppVersion = versionDto != null ? versionDto.getAppVersion() : null;
+        ResponseEntity<VersionDto> responseEntity = restTemplate.getForEntity(
+                baseUrl + "api/products/info",
+                VersionDto.class
+        );
+
+        actualAppVersion = responseEntity.getBody().getAppVersion();
 
         //then
         assertThat(appVersion).isEqualTo(actualAppVersion);
@@ -56,27 +63,37 @@ public class FindProductById {
     }
 
     @When("client wants to find a product with id {long}")
-    public void clientWantsFindProductWithId(long productId) throws IOException, InterruptedException {
+    public void clientWantsFindProductWithId(long productId)
+            throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
 
-        try (HttpClient client = HttpClient.newHttpClient()) {
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(baseUrl + endpoint + productId))
-                    .GET()
-                    .build();
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
 
-            this.response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            responseProductEntity = restTemplate.getForEntity(
+                    baseUrl + endpoint + productId,
+                    ProductDto.class
+            );
+        } catch (HttpClientErrorException e) {
+            stringErrResponse = e.getMessage();
         }
-
     }
 
     @Then("response code is {int}")
     public void responseCodeIs(int expectedCode) {
-        final int actualCode = response.statusCode();
+        final int actualCode;
+        if (stringErrResponse != null) {
+            String[] parseResponse = stringErrResponse.split(":");
+            actualCode = Integer.parseInt(parseResponse[0].trim());
+        } else {
+            actualCode = responseProductEntity.getStatusCode().value();
+        }
         assertThat(actualCode).isEqualTo(expectedCode);
     }
 
     @And("found product response body contains:")
-    public void foundProductResponseBodyContains(DataTable table) {
+    public void foundProductResponseBodyContains(DataTable table)
+            throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        RestTemplate restTemplate = RestUtil.getRestTemplate();
 
         //given
         List<Map<String, String>> rows = table.asMaps(String.class, String.class);
@@ -85,20 +102,21 @@ public class FindProductById {
 
         for (Map<String, String> columns : rows) {
 
-            expectedProduct = ProductDto.builder()
-                    .id(Long.parseLong(columns.get("id")))
-                    .summary(columns.get("summary"))
-                    .active(Boolean.parseBoolean(columns.get("active")))
-                    .description(columns.get("description"))
-                    .build();
+            expectedProduct = new ProductDto(
+                    Long.parseLong(columns.get("id")),
+                    columns.get("summary"),
+                    columns.get("description"),
+                    null,
+                    null,
+                    Boolean.parseBoolean(columns.get("active")),
+                    null);
         }
 
         //when
-        RestClient restClient = RestClient.create();
-        ProductDto actualProduct = restClient.get()
-                .uri(baseUrl + "api/products/" + expectedProduct.getId())
-                .retrieve()
-                .body(ProductDto.class);
+        ProductDto actualProduct = restTemplate.getForEntity(
+                baseUrl + "api/products/" + expectedProduct.getId(),
+                ProductDto.class
+        ).getBody();
 
         //then
         assert actualProduct != null;

@@ -1,4 +1,4 @@
-package com.iprodi08.config;
+package com.iprodi08.stepsdefs.config;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;

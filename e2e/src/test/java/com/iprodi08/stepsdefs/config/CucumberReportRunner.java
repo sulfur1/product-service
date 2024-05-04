@@ -1,4 +1,4 @@
-package com.iprodi08.config;
+package com.iprodi08.stepsdefs.config;
 
 import net.masterthought.cucumber.Configuration;
 import net.masterthought.cucumber.ReportBuilder;
