@@ -1,6 +1,8 @@
 package com.iprodi08.stepsdefs;
 
+import com.iprodi08.productservice.dto.ProductDto;
 import com.iprodi08.productservice.dto.VersionDto;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,6 +14,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +42,7 @@ public class FindProductById {
                 .retrieve()
                 .body(VersionDto.class);
 
-        actualAppVersion = versionDto.getAppVersion();
+        actualAppVersion = versionDto != null ? versionDto.getAppVersion() : null;
 
         //then
         assertThat(appVersion).isEqualTo(actualAppVersion);
@@ -69,6 +73,40 @@ public class FindProductById {
     public void responseCodeIs(int expectedCode) {
         final int actualCode = response.statusCode();
         assertThat(actualCode).isEqualTo(expectedCode);
+    }
+
+    @And("found product response body contains:")
+    public void foundProductResponseBodyContains(DataTable table) {
+
+        //given
+        List<Map<String, String>> rows = table.asMaps(String.class, String.class);
+
+        ProductDto expectedProduct = new ProductDto();
+
+        for (Map<String, String> columns : rows) {
+
+            expectedProduct = ProductDto.builder()
+                    .id(Long.parseLong(columns.get("id")))
+                    .summary(columns.get("summary"))
+                    .active(Boolean.parseBoolean(columns.get("active")))
+                    .description(columns.get("description"))
+                    .build();
+        }
+
+        //when
+        RestClient restClient = RestClient.create();
+        ProductDto actualProduct = restClient.get()
+                .uri(baseUrl + "api/products/" + expectedProduct.getId())
+                .retrieve()
+                .body(ProductDto.class);
+
+        //then
+        assert actualProduct != null;
+        assertThat(actualProduct.getDescription()).isEqualTo(expectedProduct.getDescription());
+        assertThat(actualProduct.getSummary()).isEqualTo(expectedProduct.getSummary());
+        assertThat(actualProduct.getActive()).isEqualTo(expectedProduct.getActive());
+        assertThat(actualProduct).isEqualTo(expectedProduct);
+
     }
 
 }
