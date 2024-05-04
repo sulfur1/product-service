@@ -10,13 +10,10 @@ services:
     image: ghcr.io/iprody/iprody-devs-gr0000000008-customer-service:latest
     container_name: customer-service
     env_file:
-      - ./secrets/customer-service.env
+      - ../secrets/customer-service.env
     restart: always
     networks:
       - microservices-network
-    depends_on:
-      - postgres-customer-db
-      - pgAdmin
 
   product-service:
     image: ghcr.io/iprody/iprody-devs-gr0000000008-product-service:latest
@@ -24,11 +21,8 @@ services:
     networks:
       - microservices-network
     env_file:
-      - ./secrets/product-service.env
+      - ../secrets/product-service.env
     restart: always
-    depends_on:
-      - postgres-product-db
-      - pgAdmin
 
   inquiry-service:
     image: ghcr.io/iprody/iprody-devs-gr0000000008-inquiry-service:latest
@@ -36,11 +30,8 @@ services:
     networks:
       - microservices-network
     env_file:
-      - ./secrets/inquiry-service.env
+      - ../secrets/inquiry-service.env
     restart: always
-    depends_on:
-      - postgres-inquiry-db
-      - pgAdmin
 
   gateway:
     image: nginx:latest
@@ -48,8 +39,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./gateway/nginx.conf:/etc/nginx/nginx.conf
-      - ./secrets/iprody_server.crt:/etc/nginx/ssl/iprody.crt
-      - ./secrets/iprody_server.key:/etc/nginx/ssl/iprody.key
+      - ../secrets/iprody_server.crt:/etc/nginx/ssl/iprody.crt
+      - ../secrets/iprody_server.key:/etc/nginx/ssl/iprody.key
     ports:
       - 443:443
     depends_on:
