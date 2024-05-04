@@ -88,7 +88,7 @@ public class FindProductById {
             expectedProduct = ProductDto.builder()
                     .id(Long.parseLong(columns.get("id")))
                     .summary(columns.get("summary"))
-                    .active(columns.get("active").equals("true") ? Boolean.TRUE : Boolean.FALSE)
+                    .active(Boolean.parseBoolean(columns.get("active")))
                     .description(columns.get("description"))
                     .build();
         }
@@ -101,6 +101,10 @@ public class FindProductById {
                 .body(ProductDto.class);
 
         //then
+        assert actualProduct != null;
+        assertThat(actualProduct.getDescription()).isEqualTo(expectedProduct.getDescription());
+        assertThat(actualProduct.getSummary()).isEqualTo(expectedProduct.getSummary());
+        assertThat(actualProduct.getActive()).isEqualTo(expectedProduct.getActive());
         assertThat(actualProduct).isEqualTo(expectedProduct);
 
     }
