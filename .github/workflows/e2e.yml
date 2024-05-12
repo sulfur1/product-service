@@ -46,7 +46,7 @@ jobs:
         docker volume create products-db-data
         docker volume create inquiries-db-data
         docker volume create pgAdmin-data
-        docker-compose -f docker-compose-db.yml -f docker-compose-services.yml up -d
+        docker-compose -f ./Docker/db.yml -f ./Docker/services.yml up -d
     - name: We are waiting until we receive the application version
       run: |
         sudo apt-get install -y jq

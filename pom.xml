@@ -23,14 +23,6 @@
 		<config_loc>config</config_loc>
 	</properties>
 
-	<distributionManagement>
-		<repository>
-			<id>github</id>
-			<name>GitHub OWNER Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/iprody/iprody-devs-gr0000000008-product-service</url>
-		</repository>
-	</distributionManagement>
-
 	<build>
 		<pluginManagement>
 			<plugins>
