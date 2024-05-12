@@ -56,10 +56,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             JAR_FILE=${{ env.JAR_FILE }}
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Save artifact
-          path: |
-            ./product-service-app/target
-            !./product-service-app/target/**/*.md
