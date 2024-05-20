@@ -11,14 +11,13 @@ name: E2E Test
 on:
   push:
     branches:
-      - '*'
+      - '**'
       - '!master'
 
 env:
   REGISTRY: ghcr.io
   PATH_SQL: ./e2e/insert-data.sql
   API_VERSION: 0.0.1-SNAPSHOT
-  API_VERSION_PATH: http://localhost:8083/api/info
 
 jobs:
   build:
@@ -39,7 +38,7 @@ jobs:
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
-        password: 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
+        password: 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
     - name: Docker Compose Action
       run: |
         docker volume create customers-db-data
