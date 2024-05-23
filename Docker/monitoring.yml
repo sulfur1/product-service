@@ -48,6 +48,19 @@ services:
     networks:
       - microservices-network
 
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    restart: unless-stopped
+    ports:
+      - 9115:9115
+    volumes:
+      - ./monitoring/config/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+    networks:
+      - microservices-network
+    depends_on:
+      - prometheus
+
 volumes:
   prom-data:
   grafana-data:
