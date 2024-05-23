@@ -45,7 +45,7 @@ public class FindProductById {
                 .build();
 
         ResponseEntity<VersionDto> responseEntity = client.getRestTemplate().getForEntity(
-                baseUrl + "api/products/info",
+                baseUrl + "api/v1/products/info",
                 VersionDto.class
         );
 
@@ -106,7 +106,7 @@ public class FindProductById {
         }
 
         //when
-        client.setUrl(baseUrl + "api/products/" + expectedProduct.getId());
+        client.setUrl(baseUrl + "api/v1/products/" + expectedProduct.getId());
 
         ProductDto actualProduct = client.getProduct().getBody();
 

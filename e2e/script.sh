@@ -5,6 +5,6 @@ while [ $version != "$response" ]
   do
     echo "Product service is not responding!"
     sleep 1s
-    response=$(curl -k https://localhost/api/products/info | jq -r ".appVersion")
+    response=$(curl -k https://localhost/api/v1/products/info | jq -r ".appVersion")
 done
   echo "Successfully!"
