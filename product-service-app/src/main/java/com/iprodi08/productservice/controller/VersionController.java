@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping(value = "/api/products")
+@RequestMapping(value = "/api/v1/products")
 @Slf4j
 public class VersionController {
 

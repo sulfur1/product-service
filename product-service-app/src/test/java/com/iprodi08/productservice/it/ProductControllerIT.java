@@ -53,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext
 class ProductControllerIT extends AbstractTest {
 
-    private static final String BASE_URL = "/api";
+    private static final String BASE_URL = "/api/v1";
 
     @Autowired
     private MockMvc mvc;
