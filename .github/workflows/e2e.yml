@@ -38,7 +38,7 @@ jobs:
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
-        password: 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
+        password: ${{ github.token }}
     - name: Docker Compose Action
       run: |
         docker volume create customers-db-data
