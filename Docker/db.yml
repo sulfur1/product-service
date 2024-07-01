@@ -3,6 +3,8 @@ version: '3.8'
 networks:
   microservices-network:
     driver: bridge
+  keycloak-network:
+    driver: bridge
 
 services:
 
@@ -53,6 +55,21 @@ services:
     networks:
       - microservices-network
 
+  postgres-keycloak-db:
+    container_name: postgres-keycloak
+    image: postgres:latest
+    env_file:
+      - ../secrets/keycloak-db.env
+    expose:
+      - 5435
+    ports:
+      - 5435:5435
+    command:
+      -p 5435
+    networks:
+      - keycloak-network
+    restart: unless-stopped
+
   pgAdmin:
     container_name: pgadmin4
     image: dpage/pgadmin4
@@ -67,15 +84,16 @@ services:
       - postgres-customer-db
       - postgres-product-db
       - postgres-inquiry-db
+      - postgres-keycloak-db
     networks:
       - microservices-network
 
 volumes:
   customers-db-data:
-    external: true
+    #external: true
   products-db-data:
-    external: true
+    #external: true
   inquiries-db-data:
-    external: true
+    #external: true
   pgAdmin-data:
     external: true

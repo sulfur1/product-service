@@ -3,11 +3,13 @@ version: '3.8'
 networks:
   microservices-network:
     driver: bridge
+  keycloak-network:
+    driver: bridge
 
 services:
 
   customer-service:
-    image: ghcr.io/iprody/iprody-devs-gr0000000008-customer-service:latest
+    image: customer-service:latest
     container_name: customer-service
     env_file:
       - ../secrets/customer-service.env
@@ -16,7 +18,7 @@ services:
       - microservices-network
 
   product-service:
-    image: ghcr.io/iprody/iprody-devs-gr0000000008-product-service:latest
+    image: product-service:latest
     container_name: product-service
     networks:
       - microservices-network
@@ -25,13 +27,33 @@ services:
     restart: always
 
   inquiry-service:
-    image: ghcr.io/iprody/iprody-devs-gr0000000008-inquiry-service:latest
+    image: inquiry-service:latest
     container_name: inquiry-service
     networks:
       - microservices-network
     env_file:
       - ../secrets/inquiry-service.env
     restart: always
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:legacy
+    container_name: keycloak
+    networks:
+      - keycloak-network
+    ports:
+      - 8484:8080
+    depends_on:
+      - postgres-keycloak-db
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres-keycloak-db
+      DB_DATABASE: keycloak_db
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+      KEYCLOAK_USER: "keycloak"
+      KEYCLOAK_PASSWORD: "admin"
+    links:
+      - "postgres-keycloak-db:postgres-keycloak-db"
 
   gateway:
     image: nginx:latest
